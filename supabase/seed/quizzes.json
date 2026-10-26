@@ -1,0 +1,880 @@
+{
+  "source": "Quiz expert énergie (Word client)",
+  "quizzes": [
+    {
+      "id": "q1",
+      "label": "Quiz 1",
+      "title": "Énergie, notions fondamentales",
+      "subtitle": "10 questions générales : cycles combinés, turbines à gaz, ISO 50001, pinch, LCOE, PCS/PCI, émissions.",
+      "mode": "entrainement",
+      "position": 1,
+      "questions": [
+        {
+          "id": "q1-01",
+          "position": 1,
+          "level": null,
+          "prompt": "Quel est l’ordre de grandeur du rendement électrique (base PCI) d’un cycle combiné gaz moderne de grande taille ?",
+          "choices": [
+            "35 à 40 %",
+            "45 à 50 %",
+            "55 à 62 %",
+            "70 à 75 %"
+          ],
+          "answer": "C",
+          "explanation": "Les CCGT récents de classe F/H/J atteignent 55 à 62 % de rendement net, grâce à la récupération de la chaleur d’échappement de la turbine à gaz dans un cycle vapeur. Les turbines à gaz en cycle simple se situent plutôt entre 35 et 42 %.",
+          "calc": false
+        },
+        {
+          "id": "q1-02",
+          "position": 2,
+          "level": null,
+          "prompt": "Quand la température ambiante augmente, que devient la puissance maximale d’une turbine à gaz ?",
+          "choices": [
+            "Elle augmente, car l’air est plus chaud et plus énergétique",
+            "Elle diminue, car l’air est moins dense et le débit massique chute",
+            "Elle reste constante grâce à la régulation",
+            "Elle augmente uniquement à charge partielle"
+          ],
+          "answer": "B",
+          "explanation": "Un air plus chaud est moins dense : le débit massique aspiré par le compresseur baisse, tout comme le taux de compression effectif. La puissance chute typiquement de 0,5 à 0,9 % par °C. C’est la raison d’être des systèmes de refroidissement de l’air d’admission (fogging, évaporatif).",
+          "calc": false
+        },
+        {
+          "id": "q1-03",
+          "position": 3,
+          "level": null,
+          "prompt": "Quel concept est propre à la norme ISO 50001 par rapport à une norme de management générique comme l’ISO 9001 ?",
+          "choices": [
+            "La revue de direction",
+            "L’amélioration continue (PDCA)",
+            "La situation de référence énergétique et les indicateurs de performance énergétique (IPE)",
+            "L’audit interne"
+          ],
+          "answer": "C",
+          "explanation": "L’ISO 50001 impose d’établir une situation de référence énergétique (SRE) et des IPE normalisés par les variables pertinentes (charge, météo, production) pour démontrer l’amélioration de la performance énergétique. Les autres éléments sont communs à toutes les normes de système de management.",
+          "calc": false
+        },
+        {
+          "id": "q1-04",
+          "position": 4,
+          "level": null,
+          "prompt": "En analyse pinch (intégration énergétique), que signifie la règle du point de pincement ?",
+          "choices": [
+            "Il ne faut pas transférer de chaleur à travers le pincement, ni utiliser d’utilité froide au-dessus ni d’utilité chaude en dessous",
+            "Il faut maximiser l’utilité chaude au-dessus du pincement",
+            "L’écart de température minimal doit être nul au pincement",
+            "Le pincement est le point où la pression est minimale dans le réseau"
+          ],
+          "answer": "A",
+          "explanation": "Le pincement sépare le procédé en deux zones : au-dessus, un puits de chaleur (besoin d’utilité chaude seule) ; en dessous, une source de chaleur (utilité froide seule). Transférer de la chaleur à travers le pincement augmente à la fois les besoins en chaud et en froid.",
+          "calc": false
+        },
+        {
+          "id": "q1-05",
+          "position": 5,
+          "level": null,
+          "prompt": "Un alternateur de 100 MVA fonctionne à cos φ = 0,8 et à sa puissance apparente nominale. Quelle puissance active délivre-t-il ?",
+          "choices": [
+            "60 MW",
+            "80 MW",
+            "100 MW",
+            "125 MW"
+          ],
+          "answer": "B",
+          "explanation": "P = S × cos φ = 100 × 0,8 = 80 MW. La puissance réactive associée est Q = S × sin φ = 60 Mvar.",
+          "calc": true
+        },
+        {
+          "id": "q1-06",
+          "position": 6,
+          "level": null,
+          "prompt": "Comment se définit le LCOE (coût actualisé de l’énergie) ?",
+          "choices": [
+            "Le coût d’investissement divisé par la puissance installée",
+            "La somme des coûts actualisés sur la durée de vie divisée par la somme de l’énergie produite actualisée",
+            "Le prix moyen de vente de l’électricité sur le marché de gros",
+            "Le coût du combustible divisé par le rendement"
+          ],
+          "answer": "B",
+          "explanation": "LCOE = Σ (investissement + exploitation + combustible + démantèlement) actualisés / Σ MWh produits actualisés. Il permet de comparer des filières aux profils de coûts très différents, mais ne reflète pas les coûts système (intermittence, réseau).",
+          "calc": false
+        },
+        {
+          "id": "q1-07",
+          "position": 7,
+          "level": null,
+          "prompt": "Dans le cycle vapeur d’une centrale, que provoque une baisse de la pression de condensation (meilleur vide au condenseur) ?",
+          "choices": [
+            "Une baisse du rendement du cycle",
+            "Une augmentation du rendement, car la température moyenne de rejet de chaleur diminue",
+            "Aucun effet sur le rendement",
+            "Une augmentation du titre en vapeur en sortie de turbine, sans gain de puissance"
+          ],
+          "answer": "B",
+          "explanation": "Selon Carnot et Rankine, abaisser la température de la source froide augmente le travail récupérable : la détente va plus loin dans la turbine. Le gain est limité par la température de la source froide (air ou eau) et par l’humidité en fin de détente. C’est pourquoi l’encrassement d’un condenseur ou d’un aérocondenseur fait perdre de la puissance.",
+          "calc": false
+        },
+        {
+          "id": "q1-08",
+          "position": 8,
+          "level": null,
+          "prompt": "Quel principe permet aux chambres de combustion DLN (Dry Low NOx) de réduire les NOx sans injection d’eau ou de vapeur ?",
+          "choices": [
+            "Une combustion prémélangée pauvre qui abaisse la température de flamme",
+            "Une combustion avec excès d’air minimal pour limiter l’oxygène",
+            "Un catalyseur placé dans la chaudière de récupération uniquement",
+            "Un préchauffage du gaz à très haute température"
+          ],
+          "answer": "A",
+          "explanation": "Les NOx thermiques croissent exponentiellement avec la température de flamme. Le prémélange air-gaz pauvre homogénéise le mélange et évite les zones chaudes stœchiométriques. En contrepartie, la plage de stabilité est étroite (risques de pulsations et de CO à faible charge).",
+          "calc": false
+        },
+        {
+          "id": "q1-09",
+          "position": 9,
+          "level": null,
+          "prompt": "Pourquoi le PCS d’un gaz naturel est-il supérieur à son PCI (d’environ 10 %) ?",
+          "choices": [
+            "Le PCS inclut l’énergie des impuretés du gaz",
+            "Le PCS tient compte de la chaleur latente de condensation de la vapeur d’eau produite par la combustion",
+            "Le PCI est mesuré à pression plus élevée",
+            "Le PCS inclut le travail de compression du gaz"
+          ],
+          "answer": "B",
+          "explanation": "La combustion de l’hydrogène du combustible produit de la vapeur d’eau. Le PCS compte la chaleur récupérée si cette vapeur est condensée ; le PCI suppose qu’elle reste à l’état vapeur. Pour le gaz naturel, PCS ≈ 1,11 × PCI. Il faut toujours préciser la base utilisée pour un rendement.",
+          "calc": false
+        },
+        {
+          "id": "q1-10",
+          "position": 10,
+          "level": null,
+          "prompt": "Quel est l’ordre de grandeur du facteur d’émission du gaz naturel brûlé (CO₂ direct), par kWh PCI de combustible ?",
+          "choices": [
+            "0,05 kg CO₂/kWh",
+            "0,20 kg CO₂/kWh",
+            "0,35 kg CO₂/kWh",
+            "0,50 kg CO₂/kWh"
+          ],
+          "answer": "B",
+          "explanation": "Environ 56 kg CO₂/GJ PCI, soit près de 0,20 kg CO₂ par kWh PCI de combustible. Divisé par un rendement de 55 à 60 %, cela donne environ 0,33 à 0,37 kg CO₂ par kWh électrique pour un CCGT.",
+          "calc": false
+        }
+      ]
+    },
+    {
+      "id": "q2",
+      "label": "Quiz 2",
+      "title": "Exploitation d’une centrale à cycle combiné gaz",
+      "subtitle": "10 questions ciblées : turbine à gaz, chaudière de récupération, aérocondenseur, chimie de l’eau, consignation, protections.",
+      "mode": "entrainement",
+      "position": 2,
+      "questions": [
+        {
+          "id": "q2-01",
+          "position": 1,
+          "level": null,
+          "prompt": "Sur une turbine à gaz, un écart de température d’échappement (exhaust spread) qui augmente révèle le plus souvent :",
+          "choices": [
+            "Une baisse de la température ambiante",
+            "Une combustion non uniforme (injecteur ou brûleur encrassé ou défaillant) ou un thermocouple défaillant",
+            "Un excès de pression dans la chaudière de récupération",
+            "Un défaut de l’alternateur"
+          ],
+          "answer": "B",
+          "explanation": "Les thermocouples d’échappement sont répartis sur la circonférence : un écart important entre eux traduit une répartition inégale de la combustion entre les chambres, ou une mesure défaillante. Il faut distinguer les deux avant de décider d’une inspection des injecteurs.",
+          "calc": false
+        },
+        {
+          "id": "q2-02",
+          "position": 2,
+          "level": null,
+          "prompt": "Quelle est la conséquence principale de l’encrassement des filtres du caisson d’aspiration d’une turbine à gaz ?",
+          "choices": [
+            "Une hausse de la puissance par réduction de la température d’entrée",
+            "Aucune conséquence tant que le filtre n’est pas colmaté",
+            "Une baisse de la température d’échappement uniquement",
+            "Une perte de charge accrue qui réduit le débit d’air, donc la puissance, et dégrade le rendement"
+          ],
+          "answer": "D",
+          "explanation": "Une perte de charge à l’aspiration diminue la pression d’entrée du compresseur, donc le débit massique et le taux de compression. La puissance baisse et le heat rate se dégrade. Le suivi de la perte de charge (ΔP) est le bon indicateur pour une maintenance prédictive.",
+          "calc": false
+        },
+        {
+          "id": "q2-03",
+          "position": 3,
+          "level": null,
+          "prompt": "Dans une chaudière de récupération (HRSG), que désigne le « pincement » (pinch point) de l’évaporateur ?",
+          "choices": [
+            "L’écart entre la température des gaz en sortie d’évaporateur et la température de saturation de l’eau",
+            "L’écart entre la température d’entrée et de sortie de l’eau d’alimentation",
+            "La pression minimale du ballon",
+            "La température maximale admissible des tubes du surchauffeur"
+          ],
+          "answer": "A",
+          "explanation": "Plus le pincement est faible, plus la récupération de chaleur est poussée et plus la production de vapeur est élevée, mais la surface d’échange nécessaire augmente. Un pincement qui se dégrade en exploitation peut traduire un encrassement côté gaz.",
+          "calc": false
+        },
+        {
+          "id": "q2-04",
+          "position": 4,
+          "level": null,
+          "prompt": "Quelle température ambiante conditionne en premier lieu les performances d’un aérocondenseur ?",
+          "choices": [
+            "La température de bulbe humide",
+            "La température du point de rosée",
+            "La température de bulbe sec de l’air",
+            "La température du sol"
+          ],
+          "answer": "C",
+          "explanation": "L’aérocondenseur échange de la chaleur sensible avec l’air, sans évaporation d’eau. Sa limite est donc la température de bulbe sec, contrairement à une tour de refroidissement humide qui dépend du bulbe humide. Par temps chaud, ou avec des faisceaux encrassés, la pression d’échappement de la turbine à vapeur monte et la puissance baisse.",
+          "calc": false
+        },
+        {
+          "id": "q2-05",
+          "position": 5,
+          "level": null,
+          "prompt": "Quel est l’ordre de grandeur de la conductivité d’une eau déminée de bonne qualité en sortie de lit mixte ?",
+          "choices": [
+            "Inférieure ou égale à 0,1 µS/cm",
+            "Environ 5 µS/cm",
+            "Environ 50 µS/cm",
+            "Environ 500 µS/cm"
+          ],
+          "answer": "A",
+          "explanation": "L’eau pure théorique est à environ 0,055 µS/cm à 25 °C. Une eau déminée de bonne qualité reste en dessous de 0,1 µS/cm. Au stockage, l’absorption de CO₂ de l’air et les contaminations font monter la conductivité, d’où l’intérêt des matelas d’azote ou de filtres à CO₂ sur les évents.",
+          "calc": false
+        },
+        {
+          "id": "q2-06",
+          "position": 6,
+          "level": null,
+          "prompt": "Qu’est-ce que la corrosion assistée par l’écoulement (FAC) dans un circuit eau-vapeur ?",
+          "choices": [
+            "Une fissuration due aux chlorures sous contrainte",
+            "Un dépôt de silice sur les ailettes de la turbine à vapeur",
+            "Une corrosion provoquée par un contact galvanique entre deux métaux",
+            "La dissolution de la couche protectrice de magnétite sous l’effet de l’écoulement, favorisée par un pH bas et un milieu réducteur"
+          ],
+          "answer": "D",
+          "explanation": "La FAC amincit progressivement les tubes en acier au carbone (économiseurs, évaporateurs basse pression, coudes). Elle se maîtrise par un pH d’eau d’alimentation adapté, un traitement oxygéné ou un choix de matériaux plus résistants.",
+          "calc": false
+        },
+        {
+          "id": "q2-07",
+          "position": 7,
+          "level": null,
+          "prompt": "Quelle séquence correspond à la logique d’une consignation électrique ?",
+          "choices": [
+            "Vérifier l’absence de tension, puis séparer, puis condamner",
+            "Séparer, condamner, identifier puis vérifier l’absence de tension, mettre à la terre et en court-circuit",
+            "Condamner, puis commencer le travail, puis séparer",
+            "Mettre à la terre, puis séparer, puis vérifier l’absence de tension"
+          ],
+          "answer": "B",
+          "explanation": "On sépare l’installation de toute source, on condamne la séparation (cadenas, étiquette), on identifie l’ouvrage, puis on vérifie l’absence de tension (VAT) avant de mettre à la terre et en court-circuit. La VAT n’a de sens qu’une fois la séparation faite, et la mise à la terre vient après la VAT.",
+          "calc": false
+        },
+        {
+          "id": "q2-08",
+          "position": 8,
+          "level": null,
+          "prompt": "Pourquoi réalise-t-on un cycle de purge avant l’allumage d’une turbine à gaz ?",
+          "choices": [
+            "Pour préchauffer le rotor",
+            "Pour refroidir l’huile de graissage",
+            "Pour étalonner les thermocouples",
+            "Pour évacuer tout mélange combustible résiduel du circuit des gaz et éviter une explosion à l’allumage"
+          ],
+          "answer": "D",
+          "explanation": "La turbine est lancée par le dispositif de démarrage pour balayer plusieurs volumes de la ligne d’échappement et de la chaudière de récupération. Cela évacue le gaz non brûlé éventuel avant que l’allumage ne soit autorisé.",
+          "calc": false
+        },
+        {
+          "id": "q2-09",
+          "position": 9,
+          "level": null,
+          "prompt": "Pourquoi limite-t-on les gradients de montée en température lors du démarrage d’une turbine à vapeur ?",
+          "choices": [
+            "Pour limiter les contraintes thermiques et la fatigue oligocyclique du rotor et du corps",
+            "Pour augmenter la production de condensats",
+            "Pour réduire la consommation d’eau déminée",
+            "Pour éviter la corrosion de l’alternateur"
+          ],
+          "answer": "A",
+          "explanation": "Un rotor massif chauffé trop vite présente un fort écart de température entre la surface et le cœur, donc des contraintes élevées. Les démarrages (surtout à froid) consomment de la durée de vie par fatigue. C’est pourquoi on suit la contrainte rotor et on respecte des courbes de montée en charge.",
+          "calc": false
+        },
+        {
+          "id": "q2-10",
+          "position": 10,
+          "level": null,
+          "prompt": "Que détecte la protection de terre restreinte (REF) d’un transformateur ?",
+          "choices": [
+            "Les surcharges thermiques de l’huile",
+            "Les défauts à la terre à l’intérieur de la zone de l’enroulement protégé, par comparaison du courant de neutre et de la somme des courants de phase",
+            "Les défauts entre spires uniquement",
+            "Les surtensions atmosphériques sur le réseau"
+          ],
+          "answer": "B",
+          "explanation": "La REF est une protection différentielle limitée à un enroulement, très sensible aux défauts à la terre proches du neutre, que la différentielle générale peut détecter trop faiblement. Elle est souvent complétée par la protection différentielle du transformateur et les protections mécaniques (Buchholz, température).",
+          "calc": false
+        }
+      ]
+    },
+    {
+      "id": "q3",
+      "label": "Quiz 3",
+      "title": "Suite, exploitation, performance et réseau",
+      "subtitle": "10 questions : réglage de fréquence, black start, EOH, vibrations, heat rate, lavage compresseur, ballon HRSG, ISO 50001, facteur de charge.",
+      "mode": "entrainement",
+      "position": 3,
+      "questions": [
+        {
+          "id": "q3-01",
+          "position": 1,
+          "level": null,
+          "prompt": "Un groupe a un statisme (droop) de 5 % sur un réseau à 50 Hz. Que signifie cette valeur ?",
+          "choices": [
+            "Une variation de fréquence de 5 Hz fait varier la puissance de 5 %",
+            "Une variation de fréquence de 2,5 Hz fait varier la puissance de 100 % de la puissance nominale",
+            "Le groupe perd 5 % de rendement à charge partielle",
+            "La tension peut varier de 5 % sans déclenchement"
+          ],
+          "answer": "B",
+          "explanation": "Un statisme de 5 % signifie qu’un écart de fréquence de 5 % (2,5 Hz à 50 Hz) fait passer la puissance de 0 à 100 %. C’est la base du réglage primaire de fréquence : plusieurs groupes se partagent la variation de charge proportionnellement à leur puissance.",
+          "calc": true
+        },
+        {
+          "id": "q3-02",
+          "position": 2,
+          "level": null,
+          "prompt": "Qu’est-ce qu’un démarrage en black start ?",
+          "choices": [
+            "Un démarrage de nuit pour limiter les pertes thermiques",
+            "Un démarrage après maintenance, sans mise en parallèle",
+            "Un démarrage forcé après un déclenchement sur défaut",
+            "Un démarrage sans alimentation externe du réseau, grâce à une source autonome (diesel, groupe dédié), pour reconstituer le réseau après un blackout"
+          ],
+          "answer": "D",
+          "explanation": "Après un effondrement du réseau, la centrale ne peut plus compter sur le soutirage externe pour ses auxiliaires. Un groupe de secours alimente les auxiliaires du premier groupe, qui peut alors réalimenter le réseau pas à pas.",
+          "calc": false
+        },
+        {
+          "id": "q3-03",
+          "position": 3,
+          "level": null,
+          "prompt": "Pourquoi les inspections d’une turbine à gaz (combustion, parcours des gaz chauds, majeure) se planifient-elles en heures équivalentes d’exploitation (EOH) plutôt qu’en heures réelles ?",
+          "choices": [
+            "Parce que les démarrages, déclenchements, charges élevées et combustibles différents usent les pièces chaudes plus vite que les heures à charge stable",
+            "Parce que les heures réelles ne peuvent pas être comptées",
+            "Parce que l’EOH est imposé par la réglementation environnementale",
+            "Parce que l’EOH ne tient compte que des heures de nuit"
+          ],
+          "answer": "A",
+          "explanation": "Un démarrage ou un déclenchement sur défaut peut compter pour plusieurs dizaines d’heures équivalentes, car la fatigue thermique des pièces chaudes est bien supérieure à celle d’un fonctionnement stable. Le constructeur fournit des facteurs de pondération pour chaque événement.",
+          "calc": false
+        },
+        {
+          "id": "q3-04",
+          "position": 4,
+          "level": null,
+          "prompt": "Sur un arbre de turbomachine, une composante de vibration dominante à 1× la vitesse de rotation évoque en premier lieu :",
+          "choices": [
+            "Un défaut de roulement à billes",
+            "Une dent d’engrenage cassée",
+            "Un balourd (déséquilibre du rotor)",
+            "Une cavitation"
+          ],
+          "answer": "C",
+          "explanation": "Le balourd produit une force centrifuge tournant avec le rotor, donc une vibration synchrone à 1×. Un désalignement donne plutôt du 2× et de l’axial ; les défauts de roulement apparaissent à des fréquences non synchrones.",
+          "calc": false
+        },
+        {
+          "id": "q3-05",
+          "position": 5,
+          "level": null,
+          "prompt": "Un cycle combiné affiche un heat rate net de 6 000 kJ/kWh (base PCI). Quel est son rendement net ?",
+          "choices": [
+            "50 %",
+            "55 %",
+            "60 %",
+            "65 %"
+          ],
+          "answer": "C",
+          "explanation": "Rendement = 3 600 kJ/kWh ÷ heat rate = 3 600 ÷ 6 000 = 0,60, soit 60 %. 3 600 kJ est l’équivalent énergétique d’un kWh.",
+          "calc": true
+        },
+        {
+          "id": "q3-06",
+          "position": 6,
+          "level": null,
+          "prompt": "Que permet (et ne permet pas) un lavage du compresseur d’une turbine à gaz ?",
+          "choices": [
+            "Il récupère la dégradation due à l’encrassement, mais pas celle due à l’érosion ou à l’usure des aubes",
+            "Il récupère toute la dégradation de performance",
+            "Il ne récupère que la dégradation de la turbine, pas celle du compresseur",
+            "Il ne sert qu’à refroidir le compresseur"
+          ],
+          "answer": "A",
+          "explanation": "Le lavage (en ligne ou hors ligne) élimine les dépôts sur les aubes et rétablit le débit et le rendement du compresseur. La dégradation non récupérable (érosion, jeux, corrosion) ne se corrige qu’en révision.",
+          "calc": false
+        },
+        {
+          "id": "q3-07",
+          "position": 7,
+          "level": null,
+          "prompt": "Pourquoi utilise-t-on une régulation de niveau à trois éléments sur le ballon d’une chaudière de récupération ?",
+          "choices": [
+            "Pour mesurer la conductivité de l’eau",
+            "Pour compenser les phénomènes de gonflement et de retrait (swell/shrink) en combinant niveau, débit de vapeur et débit d’eau d’alimentation",
+            "Pour réguler la température de la vapeur surchauffée",
+            "Pour équilibrer la pression entre trois ballons"
+          ],
+          "answer": "B",
+          "explanation": "Lors d’un appel de vapeur, la pression chute et les bulles de vapeur gonflent le mélange : le niveau mesuré monte alors que la masse d’eau diminue. La mesure du débit de vapeur permet d’anticiper et d’éviter une mauvaise réaction du régulateur, source de déclenchement sur niveau haut ou bas.",
+          "calc": false
+        },
+        {
+          "id": "q3-08",
+          "position": 8,
+          "level": null,
+          "prompt": "Pourquoi impose-t-on une température minimale de l’eau à l’entrée du préchauffeur de condensat d’une chaudière de récupération ?",
+          "choices": [
+            "Pour augmenter la pression du dégazeur",
+            "Pour augmenter le débit de vapeur HP",
+            "Pour éviter que les gaz d’échappement condensent sur les tubes froids, ce qui provoque une corrosion acide",
+            "Pour protéger la pompe d’extraction contre la cavitation"
+          ],
+          "answer": "C",
+          "explanation": "Si la paroi des tubes passe sous le point de rosée de l’eau (ou des acides) des gaz, de l’eau acide se condense et corrode les tubes et les ailettes. On maintient donc l’eau au-dessus d’un seuil, souvent par recirculation du condensat chaud.",
+          "calc": false
+        },
+        {
+          "id": "q3-09",
+          "position": 9,
+          "level": null,
+          "prompt": "Dans l’ISO 50001, qu’appelle-t-on un usage énergétique significatif (UES) ?",
+          "choices": [
+            "Tout équipement raccordé au réseau électrique",
+            "Un usage qui n’est pas mesurable",
+            "Un usage dont le coût est supérieur à celui du combustible",
+            "Un usage qui représente une consommation d’énergie substantielle ou un potentiel d’amélioration considérable de la performance énergétique"
+          ],
+          "answer": "D",
+          "explanation": "L’organisme identifie ses UES par l’analyse énergétique (consommations, usages, facteurs influents), puis les pilote avec des IPE et des plans d’action. Dans une centrale, les auxiliaires (pompes, ventilateurs de l’aérocondenseur, compresseurs de gaz) en sont des candidats typiques.",
+          "calc": false
+        },
+        {
+          "id": "q3-10",
+          "position": 10,
+          "level": null,
+          "prompt": "Une centrale de 400 MW produit 2 400 GWh sur une année de 8 760 heures. Quel est son facteur de charge ?",
+          "choices": [
+            "Environ 48 %",
+            "Environ 58 %",
+            "Environ 68 %",
+            "Environ 78 %"
+          ],
+          "answer": "C",
+          "explanation": "Facteur de charge = énergie produite ÷ (puissance nominale × heures) = 2 400 ÷ (0,4 × 8 760) = 2 400 ÷ 3 504 ≈ 0,685, soit environ 68 %.",
+          "calc": true
+        }
+      ]
+    },
+    {
+      "id": "q4",
+      "label": "Quiz 4",
+      "title": "Série 3, chimie eau-vapeur, protections et performance",
+      "subtitle": "10 questions pointues : conductivité cationique, silice, dégazage, protections, ASME PTC 46, calcul de débit de gaz, contre-pression, indice de Wobbe.",
+      "mode": "entrainement",
+      "position": 4,
+      "questions": [
+        {
+          "id": "q4-01",
+          "position": 1,
+          "level": null,
+          "prompt": "Que mesure la conductivité cationique (après échangeur cationique) dans un circuit eau-vapeur ?",
+          "choices": [
+            "La conductivité de l’eau brute avant déminéralisation",
+            "La contamination par des anions (chlorures, sulfates, CO₂, acides organiques), en supprimant l’effet masquant de l’ammoniaque ou de l’amine de conditionnement",
+            "Uniquement le pH de l’eau d’alimentation",
+            "La teneur en oxygène dissous"
+          ],
+          "answer": "B",
+          "explanation": "La conductivité cationique est mesurée après passage sur résine cationique : l’ammoniaque ou l’amine de conditionnement est éliminée (elle masque le signal) et il reste les acides correspondant aux anions présents (chlorures, sulfates, CO₂, acétate, formiate). C’est l’indicateur de référence de la contamination du circuit eau-vapeur ; les valeurs d’alerte se situent couramment autour de 0,2 µS/cm.",
+          "calc": false
+        },
+        {
+          "id": "q4-02",
+          "position": 2,
+          "level": null,
+          "prompt": "Pourquoi surveille-t-on la silice dans l’eau du ballon HP et dans la vapeur ?",
+          "choices": [
+            "Parce qu’elle fait monter le pH de l’eau de chaudière",
+            "Parce qu’elle attaque directement les roulements de l’alternateur",
+            "Parce qu’elle est entraînée par la vapeur (volatilité croissante avec la pression) et se dépose sur les aubes de la turbine lors de la détente",
+            "Parce qu’elle augmente la conductivité spécifique de la vapeur"
+          ],
+          "answer": "C",
+          "explanation": "La silice est volatile dans la vapeur surchauffée, d’autant plus que la pression est élevée. Lors de la détente dans la turbine, sa solubilité chute et elle se dépose sur les aubes (surtout en MP/BP), ce qui dégrade le rendement et la puissance. D’où le contrôle de la silice en eau de chaudière et en vapeur.",
+          "calc": false
+        },
+        {
+          "id": "q4-03",
+          "position": 3,
+          "level": null,
+          "prompt": "Quel est le principe physique du dégazage thermique de l’eau d’alimentation ?",
+          "choices": [
+            "La solubilité des gaz dissous tend vers zéro à la température de saturation, et la vapeur de balayage les évacue",
+            "Une résine échangeuse d’ions piège l’oxygène",
+            "Une membrane filtre l’oxygène par osmose",
+            "L’augmentation de la pression dissout les gaz dans l’eau"
+          ],
+          "answer": "A",
+          "explanation": "La solubilité des gaz dans l’eau diminue avec la température et tend vers zéro à l’ébullition (loi de Henry). Le dégazeur thermique chauffe l’eau à saturation et un balayage de vapeur évacue O₂ et CO₂ libérés.",
+          "calc": false
+        },
+        {
+          "id": "q4-04",
+          "position": 4,
+          "level": null,
+          "prompt": "Comment une protection différentielle de transformateur évite-t-elle de déclencher à tort lors de l’enclenchement (courant d’inrush) ?",
+          "choices": [
+            "Une retenue par harmonique de rang 5",
+            "Une temporisation de 10 secondes",
+            "Une retenue par la tension homopolaire",
+            "Une retenue par harmonique de rang 2"
+          ],
+          "answer": "D",
+          "explanation": "L’enclenchement d’un transformateur provoque un courant magnétisant très élevé mais un seul côté voit le courant : la différentielle y verrait un faux défaut. Ce courant est riche en harmonique 2, qui sert de retenue. L’harmonique 5 sert plutôt à détecter la surexcitation.",
+          "calc": false
+        },
+        {
+          "id": "q4-05",
+          "position": 5,
+          "level": null,
+          "prompt": "Quel phénomène la protection contre la perte d’excitation (ANSI 40) d’un alternateur cherche-t-elle à détecter et à limiter ?",
+          "choices": [
+            "Une surtension du réseau",
+            "L’alternateur absorbe de la puissance réactive du réseau et peut passer en fonctionnement asynchrone, avec échauffement du rotor et du stator",
+            "Un défaut d’isolement du bobinage statorique uniquement",
+            "Une survitesse de la turbine"
+          ],
+          "answer": "B",
+          "explanation": "Sans excitation, l’alternateur perd le synchronisme et fonctionne en générateur asynchrone en absorbant de la puissance réactive du réseau. Cela provoque des courants induits dans le rotor et un surcourant statorique, donc des échauffements. La protection (code ANSI 40) détecte généralement une impédance vue des bornes qui entre dans une caractéristique mho côté capacitif.",
+          "calc": false
+        },
+        {
+          "id": "q4-06",
+          "position": 6,
+          "level": null,
+          "prompt": "Pourquoi la protection terre stator à 100 % d’un alternateur utilise-t-elle l’harmonique 3 ?",
+          "choices": [
+            "Pour détecter les défauts entre phases",
+            "Pour mesurer la fréquence du réseau",
+            "Pour couvrir la zone proche du neutre, où la tension fondamentale d’un défaut à la terre est trop faible pour être détectée",
+            "Pour déclencher plus vite en cas de survitesse"
+          ],
+          "answer": "C",
+          "explanation": "La protection terre stator à minimum de tension homopolaire (59N) couvre environ 90 à 95 % de l’enroulement. Près du neutre, la tension fondamentale d’un défaut est trop faible. La mesure de l’harmonique 3 (ou l’injection de signal) permet d’atteindre les derniers pourcents du bobinage : c’est la protection terre stator à 100 %.",
+          "calc": false
+        },
+        {
+          "id": "q4-07",
+          "position": 7,
+          "level": null,
+          "prompt": "Quel code d’essai ASME couvre la performance globale d’une centrale à cycle combiné ?",
+          "choices": [
+            "ASME PTC 6",
+            "ASME PTC 22",
+            "ASME PTC 46",
+            "ASME PTC 4.4"
+          ],
+          "answer": "C",
+          "explanation": "L’ASME PTC 46 couvre la performance globale d’une centrale (puissance, heat rate) et les corrections aux conditions de référence. PTC 22 concerne les turbines à gaz, PTC 6 les turbines à vapeur, PTC 4.4 les chaudières de récupération.",
+          "calc": false
+        },
+        {
+          "id": "q4-08",
+          "position": 8,
+          "level": null,
+          "prompt": "Une centrale délivre 400 MW nets à un heat rate de 6 200 kJ/kWh (PCI). Avec un gaz de PCI 36 MJ/Nm³, quel est le débit de gaz consommé ?",
+          "choices": [
+            "Environ 34 400 Nm³/h",
+            "Environ 68 900 Nm³/h",
+            "Environ 103 300 Nm³/h",
+            "Environ 138 000 Nm³/h"
+          ],
+          "answer": "B",
+          "explanation": "Énergie combustible = 400 000 kW × 6 200 kJ/kWh = 2,48 × 10⁹ kJ/h = 2 480 000 MJ/h. Divisée par 36 MJ/Nm³, cela donne environ 68 900 Nm³/h.",
+          "calc": true
+        },
+        {
+          "id": "q4-09",
+          "position": 9,
+          "level": null,
+          "prompt": "Quel est l’effet d’un encrassement côté gaz des faisceaux de la chaudière de récupération sur la turbine à gaz ?",
+          "choices": [
+            "Elle augmente la contre-pression à l’échappement de la turbine à gaz et réduit sa puissance et son rendement",
+            "Elle augmente la puissance de la turbine à gaz en augmentant la température de sortie",
+            "Elle n’agit que sur la turbine à vapeur",
+            "Elle réduit la consommation de gaz"
+          ],
+          "answer": "A",
+          "explanation": "La contre-pression à l’échappement réduit le rapport de détente de la turbine à gaz, donc sa puissance et son rendement, et les pertes de charge dans la chaudière s’ajoutent à celles du conduit. Elle peut aussi élever la température d’échappement. Un ΔP gaz qui dérive est un bon signal de maintenance.",
+          "calc": false
+        },
+        {
+          "id": "q4-10",
+          "position": 10,
+          "level": null,
+          "prompt": "Qu’est-ce que l’indice de Wobbe et pourquoi est-il critique pour une turbine à gaz DLN ?",
+          "choices": [
+            "Le rapport PCI/PCS, qui décrit la quantité d’eau dans le gaz",
+            "La teneur en soufre, qui détermine la corrosion",
+            "La température de rosée du gaz",
+            "Le rapport PCS/√(densité relative), qui mesure l’interchangeabilité des gaz : une variation trop forte déstabilise la flamme d’une chambre DLN"
+          ],
+          "answer": "D",
+          "explanation": "L’indice de Wobbe vaut PCS/√d (d = densité relative par rapport à l’air). Deux gaz de même Wobbe donnent la même puissance pour une même perte de charge d’injecteur. Les chambres DLN, réglées en prémélange pauvre, tolèrent une plage étroite (souvent de l’ordre de ±5 %) avant instabilités de flamme, pulsations ou hausse des émissions.",
+          "calc": false
+        }
+      ]
+    },
+    {
+      "id": "examen",
+      "label": "Examen",
+      "title": "Quatre niveaux de difficulté croissante",
+      "subtitle": "Quatre niveaux : Fondamental (Q1-5), Intermédiaire (Q6-10), Avancé (Q11-13), Expert (Q14-15). Barème conseillé : 1 point par bonne réponse, total sur 15.",
+      "mode": "examen",
+      "position": 5,
+      "questions": [
+        {
+          "id": "examen-01",
+          "position": 1,
+          "level": 1,
+          "prompt": "Quelle énergie produit une centrale de 250 MW fonctionnant à pleine puissance pendant 6 heures ?",
+          "choices": [
+            "42 MWh",
+            "256 MWh",
+            "1 500 MWh",
+            "15 000 MWh"
+          ],
+          "answer": "C",
+          "explanation": "Énergie = puissance × durée = 250 MW × 6 h = 1 500 MWh.",
+          "calc": true
+        },
+        {
+          "id": "examen-02",
+          "position": 2,
+          "level": 1,
+          "prompt": "Quel cycle thermodynamique modélise une turbine à gaz ?",
+          "choices": [
+            "Rankine",
+            "Brayton",
+            "Stirling",
+            "Otto"
+          ],
+          "answer": "B",
+          "explanation": "Le cycle de Brayton (compression, combustion à pression constante, détente) décrit la turbine à gaz. Le cycle de Rankine décrit le cycle vapeur.",
+          "calc": false
+        },
+        {
+          "id": "examen-03",
+          "position": 3,
+          "level": 1,
+          "prompt": "Quel est le constituant principal du gaz naturel ?",
+          "choices": [
+            "Le propane",
+            "L’hydrogène",
+            "Le butane",
+            "Le méthane"
+          ],
+          "answer": "D",
+          "explanation": "Le gaz naturel est composé à plus de 80 à 95 % de méthane (CH₄), avec de l’éthane, du propane, de l’azote et du CO₂ en quantités variables.",
+          "calc": false
+        },
+        {
+          "id": "examen-04",
+          "position": 4,
+          "level": 1,
+          "prompt": "Quelle expression donne la puissance active d’un système triphasé équilibré (U tension composée, I courant de ligne) ?",
+          "choices": [
+            "P = √3 × U × I × cos φ",
+            "P = U × I × sin φ",
+            "P = 3 × U × I",
+            "P = U / I × cos φ"
+          ],
+          "answer": "A",
+          "explanation": "En triphasé équilibré, P = √3 × U (tension composée) × I × cos φ.",
+          "calc": false
+        },
+        {
+          "id": "examen-05",
+          "position": 5,
+          "level": 1,
+          "prompt": "Quelle est la formule du rendement de Carnot ?",
+          "choices": [
+            "1 − T_chaud/T_froid, en °C",
+            "T_froid/T_chaud, en °C",
+            "1 − T_froid/T_chaud, en kelvins",
+            "T_chaud − T_froid, en kelvins"
+          ],
+          "answer": "C",
+          "explanation": "η Carnot = 1 − T_froid/T_chaud avec des températures absolues en kelvins. C’est le rendement maximal théorique d’une machine entre deux sources.",
+          "calc": false
+        },
+        {
+          "id": "examen-06",
+          "position": 6,
+          "level": 2,
+          "prompt": "Pourquoi les gaz d’échappement d’une turbine à gaz contiennent-ils encore environ 12 à 15 % d’oxygène ?",
+          "choices": [
+            "Parce que le combustible contient de l’oxygène",
+            "Parce que l’excès d’air sert à limiter la température des gaz admissible par les matériaux de la turbine",
+            "Parce que l’oxygène n’est pas consommé par la combustion",
+            "Parce que le compresseur ajoute de l’oxygène"
+          ],
+          "answer": "B",
+          "explanation": "La température des gaz de combustion est limitée par la tenue des matériaux de la turbine. On travaille donc avec un fort excès d’air (λ ≈ 2 à 3), ce qui laisse typiquement 12 à 15 % d’oxygène dans les gaz d’échappement.",
+          "calc": false
+        },
+        {
+          "id": "examen-07",
+          "position": 7,
+          "level": 2,
+          "prompt": "Un alternateur est couplé à un réseau puissant. Que provoque une augmentation du courant d’excitation, à puissance active constante ?",
+          "choices": [
+            "La fréquence du réseau augmente",
+            "La puissance active augmente",
+            "La vitesse de la turbine augmente",
+            "La puissance réactive fournie au réseau augmente, la puissance active restant inchangée"
+          ],
+          "answer": "D",
+          "explanation": "Sur un réseau puissant, la puissance active est fixée par la turbine, tandis que l’excitation règle la puissance réactive. Une surexcitation fait fournir de la puissance réactive au réseau, une sous-excitation en fait absorber.",
+          "calc": false
+        },
+        {
+          "id": "examen-08",
+          "position": 8,
+          "level": 2,
+          "prompt": "Un ventilateur piloté par variateur passe de 100 % à 80 % de sa vitesse. Quelle est approximativement la puissance absorbée (par rapport à la puissance nominale) ?",
+          "choices": [
+            "80 %",
+            "64 %",
+            "51 %",
+            "40 %"
+          ],
+          "answer": "C",
+          "explanation": "Selon les lois de similitude des ventilateurs, la puissance varie comme le cube de la vitesse : 0,8³ = 0,512, soit environ 51 % de la puissance nominale. Le débit, lui, baisse proportionnellement à la vitesse (80 %).",
+          "calc": true
+        },
+        {
+          "id": "examen-09",
+          "position": 9,
+          "level": 2,
+          "prompt": "Pourquoi réchauffe-t-on le gaz naturel avant (ou pendant) sa détente dans un poste de détente ?",
+          "choices": [
+            "Pour compenser le refroidissement dû à la détente (Joule-Thomson) et éviter hydrates et givre",
+            "Pour augmenter la pression en aval",
+            "Pour augmenter l’indice de Wobbe",
+            "Pour faire monter le PCS du gaz"
+          ],
+          "answer": "A",
+          "explanation": "La détente du gaz (effet Joule-Thomson) abaisse sa température d’environ 0,4 à 0,5 °C par bar. Sans réchauffage, la température peut passer sous 0 °C et former des hydrates ou du givre, et abaisser la température du gaz en dessous des valeurs admises par la turbine.",
+          "calc": false
+        },
+        {
+          "id": "examen-10",
+          "position": 10,
+          "level": 2,
+          "prompt": "Pourquoi limite-t-on le taux d’humidité de la vapeur dans les derniers étages d’une turbine à vapeur ?",
+          "choices": [
+            "Pour augmenter la production de vapeur",
+            "Pour limiter l’érosion des aubes des derniers étages par les gouttelettes d’eau",
+            "Pour réduire la consommation d’eau",
+            "Pour augmenter la pression au condenseur"
+          ],
+          "answer": "B",
+          "explanation": "Des gouttelettes d’eau accélérées frappent les aubes des derniers étages et les érodent. C’est pourquoi on limite le taux d’humidité en fin de détente (titre généralement supérieur à environ 0,88–0,9), ce qui borne la pression minimale au condenseur pour un cycle donné.",
+          "calc": false
+        },
+        {
+          "id": "examen-11",
+          "position": 11,
+          "level": 3,
+          "prompt": "Une turbine à gaz a un rendement de 38 %. Sa chaudière de récupération récupère 85 % de la chaleur des gaz d’échappement et le cycle vapeur a un rendement de 35 %. En négligeant les autres pertes, quel est le rendement du cycle combiné ?",
+          "choices": [
+            "Environ 48 %",
+            "Environ 52 %",
+            "Environ 56 %",
+            "Environ 60 %"
+          ],
+          "answer": "C",
+          "explanation": "En négligeant les pertes mécaniques et électriques : η_cc = η_TG + (1 − η_TG) × η_chaudière × η_vapeur = 0,38 + 0,62 × 0,85 × 0,35 ≈ 0,38 + 0,184 = 0,564, soit environ 56 %.",
+          "calc": true
+        },
+        {
+          "id": "examen-12",
+          "position": 12,
+          "level": 3,
+          "prompt": "Pourquoi le rendement marginal de la post-combustion (duct burner) d’une chaudière de récupération est-il inférieur au rendement global du cycle combiné ?",
+          "choices": [
+            "Parce qu’elle augmente les pertes par rayonnement",
+            "Parce qu’elle élève la température d’entrée de la turbine à gaz",
+            "Parce qu’elle produit plus de NOx uniquement",
+            "Parce que la chaleur ajoutée n’est valorisée que par le cycle vapeur, dont le rendement est inférieur à celui du cycle combiné"
+          ],
+          "answer": "D",
+          "explanation": "La chaleur apportée par la post-combustion n’est convertie que par le cycle vapeur (rendement d’environ 35 à 40 %), alors que le gaz brûlé dans la turbine bénéficie des deux cycles. La post-combustion apporte de la puissance de pointe et de la souplesse, au prix d’un rendement marginal plus faible.",
+          "calc": false
+        },
+        {
+          "id": "examen-13",
+          "position": 13,
+          "level": 3,
+          "prompt": "Dans le suivi de la performance énergétique (ISO 50001), que représente la courbe CUSUM ?",
+          "choices": [
+            "La somme cumulée des écarts entre consommation réelle et consommation prévue par le modèle de référence, dont la pente révèle les dérives et les économies",
+            "La moyenne des consommations sur douze mois",
+            "Le maximum de consommation observé en un mois",
+            "Le ratio entre l’énergie consommée et le prix du combustible"
+          ],
+          "answer": "A",
+          "explanation": "Le CUSUM trace la somme cumulée des écarts entre consommation réelle et consommation attendue (modèle de référence, par exemple une régression sur la charge et la température). Une pente descendante révèle des économies, une pente montante une dérive. Il rend visibles des dérives faibles que la lecture mensuelle masque.",
+          "calc": false
+        },
+        {
+          "id": "examen-14",
+          "position": 14,
+          "level": 4,
+          "prompt": "Les émissions de NOx d’une turbine à gaz sont mesurées à 25 ppm avec 14 % d’O₂ (sec). Quelle est la concentration corrigée à la référence de 15 % d’O₂ ?",
+          "choices": [
+            "18,5 ppm",
+            "21,4 ppm",
+            "25,0 ppm",
+            "29,2 ppm"
+          ],
+          "answer": "B",
+          "explanation": "C_corrigé = C_mesuré × (20,9 − 15) / (20,9 − O₂ mesuré) = 25 × 5,9 / 6,9 ≈ 21,4 ppm. Quand l’O₂ mesuré est inférieur à 15 %, les fumées sont moins diluées que la référence : la concentration corrigée est donc plus basse.",
+          "calc": true
+        },
+        {
+          "id": "examen-15",
+          "position": 15,
+          "level": 4,
+          "prompt": "Pourquoi une chaudière de récupération moderne comporte-t-elle plusieurs niveaux de pression (HP/MP/BP) plutôt qu’un seul ?",
+          "choices": [
+            "Pour augmenter la pression de la vapeur à l’échappement",
+            "Pour réduire le nombre d’équipements",
+            "Pour mieux épouser la courbe de refroidissement des gaz, réduire les irréversibilités et abaisser la température des fumées en cheminée",
+            "Pour supprimer le besoin de dégazeur"
+          ],
+          "answer": "C",
+          "explanation": "Les gaz se refroidissent de manière quasi continue de 600 °C à moins de 100 °C, alors que l’eau change d’état à température constante. Plusieurs niveaux de pression permettent de mieux ajuster les deux courbes, donc de réduire les écarts de température (irréversibilités) et de descendre la température en cheminée, au prix d’un coût d’investissement plus élevé.",
+          "calc": false
+        }
+      ]
+    }
+  ]
+}
