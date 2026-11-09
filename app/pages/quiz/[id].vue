@@ -19,12 +19,14 @@ const calcTotal = computed(() => (list.value || []).reduce((n, q) => n + (q.calc
 const game = useQuiz()
 const { state } = game
 const { play } = useSound()
+const { kiosk } = useKiosk()
 
 useHead({ title: () => (quiz.value ? `${quiz.value.label} : ${quiz.value.title} — Quiz expert énergie` : 'Quiz expert énergie') })
 
 const isExam = computed(() => quiz.value?.mode === 'examen')
 const wantsReview = computed(() => route.query.revision === '1')
-const defiSlug = typeof route.query.defi === 'string' && /^[0-9a-f]{10}$/.test(route.query.defi) ? route.query.defi : null
+// borne : pas de défi (lien à partager) ni de partage
+const defiSlug = !kiosk && typeof route.query.defi === 'string' && /^[0-9a-f]{10}$/.test(route.query.defi) ? route.query.defi : null
 const { data: defi } = useFetch(`/api/results/${defiSlug}`, { immediate: !!defiSlug, server: false, lazy: true })
 
 const mounted = ref(false)
@@ -260,9 +262,11 @@ const onShared = () => game.award('partage')
           <div v-if="!cur" class="field">
             <label for="pseudo">Votre pseudo, affiché au classement</label>
             <input
-              id="pseudo" v-model="nameInput" type="text" maxlength="20" autocomplete="nickname" spellcheck="false"
+              id="pseudo" v-model="nameInput" type="text" maxlength="20" spellcheck="false"
+              :autocomplete="kiosk ? 'off' : 'nickname'" :inputmode="kiosk ? 'none' : undefined"
               :aria-invalid="!!nameError" :aria-describedby="nameError ? 'pseudo-error' : 'pseudo-help'"
             >
+            <TouchKeyboard v-if="kiosk" v-model="nameInput" :maxlength="20" />
             <p v-if="nameError" id="pseudo-error" class="field-error" role="alert">{{ nameError }}</p>
             <p v-else id="pseudo-help" class="help">De 2 à 20 caractères. Aucun compte, aucune donnée personnelle.</p>
           </div>
@@ -308,7 +312,7 @@ const onShared = () => game.award('partage')
           <button class="btn" type="submit" :disabled="!selected || busy">
             {{ isExam ? (isLast ? 'Valider et terminer' : 'Valider ma réponse') : 'Valider' }}
           </button>
-          <p class="help">Touches A à D pour choisir, Entrée pour valider.</p>
+          <p v-if="!kiosk" class="help">Touches A à D pour choisir, Entrée pour valider.</p>
         </div>
       </QuestionCard>
 
@@ -386,12 +390,12 @@ const onShared = () => game.award('partage')
         </ol>
       </section>
 
-      <ShareResult v-if="!result.review && shareData" :result="shareData" :done="state.done" @shared="onShared" />
+      <ShareResult v-if="!kiosk && !result.review && shareData" :result="shareData" :done="state.done" @shared="onShared" />
 
       <section v-if="!result.review" class="panel board" aria-labelledby="board-title">
         <h2 id="board-title">Classement · {{ quiz.label }}</h2>
         <LeaderboardPanel :quiz="id" :highlight="result.slug" :me="result.rank ? { rank: result.rank, name: result.name, score: result.score, total: result.total, time: result.duration } : null" />
-        <p class="permalink"><AppIcon name="link" :size="16" /> <NuxtLink :to="`/resultat/${result.slug}`">Lien permanent de ce résultat</NuxtLink></p>
+        <p v-if="!kiosk" class="permalink"><AppIcon name="link" :size="16" /> <NuxtLink :to="`/resultat/${result.slug}`">Lien permanent de ce résultat</NuxtLink></p>
       </section>
     </section>
   </div>

@@ -1,0 +1,36 @@
+# Application Windows de la borne (npm run kiosk:dist) : installeur NSIS x64.
+# L'application Electron est dans electron/ ; le serveur Nitro (.output) est copié
+# à côté, hors de l'archive asar (resources/server).
+appId: ci.ciprel.quiz-expert-energie
+# noms techniques en ASCII : un « é » dans le nom de l'exécutable fait planter Electron
+# au démarrage (constaté sur macOS). Les raccourcis gardent l'accent (nsis.shortcutName).
+productName: Quiz expert energie
+executableName: quiz-expert-energie
+copyright: CIPREL
+directories:
+  app: electron
+  output: dist-electron
+  buildResources: electron/build
+# rien de node_modules : le serveur .output embarque déjà ses dépendances,
+# et le processus principal n'utilise que Node et Electron
+files:
+  - "**/*"
+  - "!build/**"
+  - "!node_modules/**"
+extraResources:
+  - from: .output
+    to: server
+asar: true
+win:
+  target:
+    - target: nsis
+      arch: [x64]
+  icon: electron/build/icon.png
+  artifactName: quiz-expert-energie-borne-${version}-setup.${ext}
+nsis:
+  oneClick: true
+  perMachine: false
+  runAfterFinish: true
+  createDesktopShortcut: true
+  createStartMenuShortcut: true
+  shortcutName: Quiz expert énergie

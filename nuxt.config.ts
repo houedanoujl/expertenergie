@@ -2,7 +2,12 @@
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: false },
-  css: ['~/assets/css/main.css'],
+  css: [
+    // polices embarquées (aucun appel à Google Fonts : la borne tourne hors ligne)
+    '@fontsource/baloo-2/600.css', '@fontsource/baloo-2/700.css', '@fontsource/baloo-2/800.css',
+    '@fontsource/nunito/500.css', '@fontsource/nunito/600.css', '@fontsource/nunito/700.css', '@fontsource/nunito/800.css',
+    '~/assets/css/main.css',
+  ],
   app: {
     head: {
       htmlAttrs: { lang: 'fr' },
@@ -14,19 +19,26 @@ export default defineNuxtConfig({
       ],
       link: [
         { rel: 'icon', href: '/favicon.ico' },
-        { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
-        { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' },
-        { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@500;600;700;800&display=swap' },
       ],
     },
   },
   runtimeConfig: {
+    // stockage : 'supabase' (web) ou 'local' (borne hors ligne) : NUXT_STORAGE
+    storage: 'supabase',
     // Supabase (côté serveur uniquement) : NUXT_SUPABASE_URL, NUXT_SUPABASE_KEY (clé publishable)
     supabaseUrl: '',
     supabaseKey: '',
+    // stockage local : dossier du journal des tentatives (NUXT_DATA_DIR)
+    // et jeton des routes /api/admin (NUXT_ADMIN_TOKEN, fourni par l'application Electron)
+    dataDir: '',
+    adminToken: '',
     public: {
       // adresse publique du quiz (liens de partage, Open Graph) : NUXT_PUBLIC_SITE_URL
       siteUrl: '',
+      // mode borne tactile : pas de partage, clavier à l'écran, remise à zéro après inactivité
+      // NUXT_PUBLIC_KIOSK=true, NUXT_PUBLIC_IDLE_SECONDS (90 par défaut)
+      kiosk: false,
+      idleSeconds: 90,
     },
   },
 })

@@ -25,6 +25,9 @@ const PATHS = {
   target: 'M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z M17 12a5 5 0 1 1-10 0 5 5 0 0 1 10 0z M12 12h.01',
   rotate: 'M4 12a8 8 0 1 0 2.4-5.7L4 8.5 M4 4v4.5h4.5',
   flag: 'M5 21V4 M5 4h11l-2 4 2 4H5',
+  backspace: 'M9 5h11v14H9l-6-7z M12 9l5 6 M17 9l-5 6',
+  player: 'M15 19a6 6 0 0 0-12 0 M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z M19 8v6 M16 11h6',
+  power: 'M12 3v9 M7 5.5a8 8 0 1 0 10 0',
 }
 </script>
 

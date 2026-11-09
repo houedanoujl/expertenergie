@@ -8,11 +8,19 @@
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
     "content:extract": "node scripts/extract-docx.mjs",
-    "content:seed": "node scripts/build-seed.mjs"
+    "content:seed": "node scripts/build-seed.mjs",
+    "kiosk:start": "electron electron --windowed",
+    "kiosk:dist": "nuxt build && electron-builder --win --x64"
   },
   "dependencies": {
+    "@fontsource/baloo-2": "^5.3.0",
+    "@fontsource/nunito": "^5.3.0",
     "nuxt": "^4.6.2",
     "vue": "^3.5.44",
     "vue-router": "^5.4.0"
+  },
+  "devDependencies": {
+    "electron": "^45.2.3",
+    "electron-builder": "^26.18.0"
   }
 }

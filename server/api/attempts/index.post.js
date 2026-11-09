@@ -11,5 +11,5 @@ export default defineEventHandler(async (event) => {
     }
     questions = [...new Set(body.questions)]
   }
-  return await sbRpc('quiz_start', { p_quiz: body.quiz, p_name: name, p_questions: questions })
+  return await useQuizStore().start({ quiz: body.quiz, name, questions })
 })

@@ -1,0 +1,56 @@
+# Application Windows de la borne : build sur Windows, test de fumée de l'exécutable,
+# puis pré-version GitHub avec l'installeur quand on pousse une étiquette borne-v*.
+#   git tag borne-v1.0.0-beta.1 && git push origin borne-v1.0.0-beta.1
+name: Borne Windows
+
+on:
+  push:
+    tags: ['borne-v*']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Build Nuxt (serveur Nitro autonome)
+        run: npm run build
+
+      - name: Installeur Windows (NSIS x64)
+        run: npx electron-builder --win --x64 --publish never
+
+      # Lance l'exécutable packagé, joue une partie, vérifie le rendu de la page
+      # (captures d'écran) et le journal technique : voir scripts/borne-smoke.mjs
+      - name: Test de fumée de l'exécutable
+        run: node scripts/borne-smoke.mjs dist-electron/win-unpacked/quiz-expert-energie.exe borne-smoke
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: borne-windows
+          path: |
+            dist-electron/*-setup.exe
+            borne-smoke/
+          retention-days: 30
+
+      - name: Pré-version GitHub
+        if: startsWith(github.ref, 'refs/tags/borne-v')
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" dist-electron/*-setup.exe \
+            --prerelease --title "Borne Windows ${GITHUB_REF_NAME#borne-v} (test)" \
+            --notes-file .github/borne-release-notes.md

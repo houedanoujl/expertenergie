@@ -3,7 +3,8 @@
 // Les réponses, elles, sont enregistrées dans Supabase au fil de l'eau (API /api/attempts).
 import { ORDER } from '~/data/sections'
 
-const KEY = 'quiz-expert-energie:v1'
+export const STORAGE_KEY = 'quiz-expert-energie:v1'
+const KEY = STORAGE_KEY
 
 export const BADGES = [
   { id: 'premier', name: 'Premier quiz', desc: 'Un premier quiz terminé.' },

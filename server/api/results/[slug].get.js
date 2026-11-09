@@ -2,7 +2,7 @@
 export default defineEventHandler(async (event) => {
   const slug = getRouterParam(event, 'slug')
   if (!/^[0-9a-f]{10}$/.test(slug || '')) throw createError({ statusCode: 404, statusMessage: 'Résultat introuvable.' })
-  const r = await sbRpc('quiz_result', { p_slug: slug })
+  const r = await useQuizStore().result(slug)
   if (!r) throw createError({ statusCode: 404, statusMessage: 'Résultat introuvable.' })
   return r
 })

@@ -1,9 +1,9 @@
 <script setup>
 // Accueil : le cycle combiné s'allume au fil des quiz, puis le parcours en cinq étapes.
 import { SECTIONS, ORDER } from '~/data/sections'
-import { BADGES } from '~/composables/useQuiz'
 
 const { state, charge, doneCount } = useQuiz()
+const { kiosk, badges: BADGES, resetPlayer, idleSeconds } = useKiosk()
 const config = useRuntimeConfig()
 const site = (config.public.siteUrl || useRequestURL().origin).replace(/\/$/, '')
 useSeoMeta({
@@ -44,6 +44,9 @@ const missed = id => (mounted.value ? state.value.missed[id]?.length || 0 : 0)
 const best = id => (mounted.value ? state.value.best[id] : null)
 
 const boardOpen = ref(false)
+// borne : laisser la place au visiteur suivant
+const newOpen = ref(false)
+const hasPlayer = computed(() => mounted.value && !!(state.value.name || state.value.current || done.value.length || Object.keys(state.value.badges).length))
 const boardQuiz = ref('q1')
 function onTabKey (e) {
   const i = ORDER.indexOf(boardQuiz.value)
@@ -58,13 +61,14 @@ function onTabKey (e) {
 <template>
   <div class="page">
     <header class="top">
-      <img src="/brand/ciprel.png" alt="CIPREL" class="logo" width="112" height="50">
+      <img src="/brand/ciprel.png" alt="CIPREL" class="logo" width="112" height="50" data-admin-tap draggable="false">
       <div class="title">
         <h1>Quiz expert énergie</h1>
         <p>Centrales à cycle combiné gaz, performance et management de l’énergie : {{ total }} questions corrigées et expliquées.</p>
       </div>
       <div class="tools">
         <button class="btn ghost" type="button" @click="boardOpen = true"><AppIcon name="trophy" />Classement</button>
+        <button v-if="kiosk && hasPlayer" class="btn ghost" type="button" @click="newOpen = true"><AppIcon name="player" />Nouveau joueur</button>
         <SoundToggle />
       </div>
     </header>
@@ -126,7 +130,8 @@ function onTabKey (e) {
 
     <footer class="foot">
       <p>Chaque question propose quatre réponses, avec un corrigé et une explication. Barème de l’examen : 0 à 7 à reprendre, 8 à 11 acquis, 12 à 15 niveau expert.</p>
-      <p v-if="doneCount" class="muted">Progression enregistrée sur cet appareil.</p>
+      <p v-if="kiosk" class="muted">Après {{ idleSeconds < 120 ? `${idleSeconds} secondes` : `${Math.round(idleSeconds / 60)} minutes` }} sans activité, la borne efface la progression pour le visiteur suivant. Le classement reste.</p>
+      <p v-else-if="doneCount" class="muted">Progression enregistrée sur cet appareil.</p>
     </footer>
 
     <AppDialog :open="boardOpen" title="Classement" wide @close="boardOpen = false">
@@ -141,6 +146,14 @@ function onTabKey (e) {
       </div>
       <div :id="`panel-${boardQuiz}`" role="tabpanel" :aria-labelledby="`tab-${boardQuiz}`">
         <LeaderboardPanel v-if="boardOpen" :quiz="boardQuiz" :highlight="best(boardQuiz)?.slug" />
+      </div>
+    </AppDialog>
+
+    <AppDialog v-if="kiosk" :open="newOpen" title="Nouveau joueur" @close="newOpen = false">
+      <p>La progression{{ state.name ? ` de ${state.name}` : '' }} (centrale, récompenses, quiz en cours) sera effacée de la borne. Les scores restent au classement.</p>
+      <div class="confirm">
+        <button class="btn" type="button" @click="resetPlayer"><AppIcon name="player" />Laisser la place</button>
+        <button class="btn ghost" type="button" @click="newOpen = false">Annuler</button>
       </div>
     </AppDialog>
   </div>
@@ -199,6 +212,8 @@ function onTabKey (e) {
   font-family: var(--font-display); font-weight: 700; cursor: pointer;
 }
 .tab[aria-selected="true"] { border: 3px solid var(--ink); background: var(--orange); }
+.confirm { display: flex; flex-wrap: wrap; gap: 10px; }
+.tools { flex-wrap: wrap; }
 
 @media (min-width: 768px) {
   .page { padding: 24px 28px 48px; }

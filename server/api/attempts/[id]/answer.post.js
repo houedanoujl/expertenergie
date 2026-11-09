@@ -7,5 +7,5 @@ export default defineEventHandler(async (event) => {
   const choice = String(body?.choice || '').toUpperCase()
   if (!['A', 'B', 'C', 'D'].includes(choice)) throw createError({ statusCode: 400, statusMessage: 'Réponse invalide.' })
   const time = Number.isFinite(body?.time) ? Math.min(Math.max(Math.round(body.time), 0), 3600000) : 0
-  return await sbRpc('quiz_answer', { p_attempt: id, p_token: body.token, p_question: body.question, p_choice: choice, p_time_ms: time })
+  return await useQuizStore().answer({ attempt: id, token: body.token, question: body.question, choice, time })
 })

@@ -25,3 +25,6 @@ logs
 
 # Captures de contrôle
 reference/*.png
+
+# Application de la borne (electron-builder)
+dist-electron

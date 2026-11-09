@@ -72,7 +72,38 @@ La progression (meilleurs scores, erreurs à réviser, récompenses, tentative e
 
 En local, elles vont dans `.env` (non versionné, voir `.env.example`). Sur Vercel, Nuxt est détecté automatiquement : il suffit de définir ces variables dans **Project Settings → Environment Variables**.
 
+## Borne tactile (hors ligne)
+
+La même application tourne sur une borne Windows sans connexion, empaquetée avec Electron (`electron/`).
+
+```bash
+npm run build          # serveur Nitro autonome (.output)
+npm run kiosk:start    # essai local dans une fenêtre
+npm run kiosk:dist     # installeur Windows x64 (dist-electron/), même depuis un Mac
+```
+
+L'étiquette `borne-v*` lance `.github/workflows/borne-windows.yml` : build sur Windows, test de fumée de l'exécutable, puis pré-version GitHub avec l'installeur.
+
+- **Serveur** : Electron lance `.output/server/index.mjs` sur `127.0.0.1` avec `NUXT_STORAGE=local`. Les routes `/api` gardent le même contrat, mais `server/backends/local.js` remplace Supabase. Les questions viennent de `supabase/seed/quizzes.json`. Les tentatives vont dans un journal en ajout seul (`data/journal.ndjson`), synchronisé sur le disque à chaque réponse. Une ligne tronquée par une coupure de courant est ignorée à la relecture.
+- **Hors ligne** : les polices sont embarquées (`@fontsource`). Toute requête qui ne vise pas le serveur local est bloquée et notée dans `logs/borne.log`.
+- **Mode borne** (`NUXT_PUBLIC_KIOSK`) :
+  - pas de partage, de défi ni de récompense « Ambassadeur » ;
+  - clavier AZERTY à l'écran pour le pseudo ;
+  - « Toujours là ? » après `idleSeconds` sans toucher l'écran, puis remise à zéro du joueur ;
+  - bouton « Nouveau joueur ».
+- **Administration** : 5 touchers sur le logo de l'accueil, puis le code. On peut y exporter les résultats en CSV (tentatives, réponses et copie du journal), redémarrer l'écran ou quitter l'application. Le code est vérifié par le processus principal. `Ctrl+Maj+Q` quitte aussi l'application.
+- **Fichiers sur la borne**, dans `%APPDATA%\quiz-expert-energie-borne` :
+
+| Fichier | Contenu |
+|---|---|
+| `borne.json` | réglages, créés au premier lancement : `adminPin` (2468 par défaut, à changer), `idleSeconds`, `zoom`, `kiosk`, `openAtLogin`, `disableGpu`, `port` |
+| `data\journal.ndjson` | tentatives et réponses |
+| `logs\borne.log` | journal technique |
+
+Sur Vercel, définir `ELECTRON_SKIP_BINARY_DOWNLOAD=1` pour ne pas télécharger Electron à l'installation.
+
 ## Limites connues
 
 - Sans compte, rien n'empêche de rejouer un quiz après avoir vu sa correction : le classement est indicatif.
 - `public/og.png` (aperçu des liens partagés) est une image statique.
+- Borne : l'installeur n'est pas signé (avertissement SmartScreen à l'installation). La borne garde son propre classement, sans lien avec Supabase.
