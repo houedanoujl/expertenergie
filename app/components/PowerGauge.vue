@@ -1,8 +1,8 @@
 <script setup>
-// Charge de la centrale : meilleures bonnes réponses cumulées sur les 55 questions.
+// Charge de la centrale : meilleures bonnes réponses cumulées sur l'ensemble des questions.
 const props = defineProps({
   value: { type: Number, required: true },
-  max: { type: Number, default: 55 },
+  max: { type: Number, default: 30 },
 })
 const pct = computed(() => (props.max ? Math.round((props.value / props.max) * 100) : 0))
 </script>

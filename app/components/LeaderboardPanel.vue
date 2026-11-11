@@ -1,11 +1,12 @@
 <script setup>
-// Classement d'un quiz (parties classées : les révisions n'y entrent pas).
+// Classement d'un quiz, ou de tous (quiz="all") : chaque ligne porte alors le repère de son quiz.
+// Parties classées seulement : les révisions et les échecs (temps écoulé) n'y entrent pas.
 import { formatTime } from '~/composables/useQuiz'
 
 const props = defineProps({
   quiz: { type: String, required: true },
   highlight: { type: String, default: null }, // slug de ma tentative
-  me: { type: Object, default: null },        // { rank, name, score, total, time } si hors du top affiché
+  me: { type: Object, default: null },        // { rank, name, points, score, total, time } si hors du top affiché
 })
 const { data, pending, error, refresh } = useFetch('/api/leaderboard', {
   query: computed(() => ({ quiz: props.quiz, limit: 20 })),
@@ -28,14 +29,14 @@ const medal = r => (r === 1 ? 'or' : r === 2 ? 'argent' : r === 3 ? 'bronze' : n
         <li v-for="e in data.entries" :key="e.slug" :class="{ me: e.slug === highlight }">
           <span class="rank" :class="medal(e.rank)"><span class="sr-only">Rang </span>{{ e.rank }}</span>
           <span class="name">{{ e.name }}<span v-if="e.slug === highlight" class="you"> (vous)</span></span>
-          <span class="score">{{ e.score }}/{{ e.total }}</span>
-          <span class="meta"><LevelPill :level="e.level" /> {{ formatTime(e.time) }}</span>
+          <span class="score">{{ e.points ?? 0 }}<span class="unit"> pts</span></span>
+          <span class="meta"><QuizBadge v-if="quiz === 'all'" :quiz="e.quiz" /><span>{{ e.score }}/{{ e.total }} justes</span><span><span class="sr-only">en </span>{{ formatTime(e.time) }}</span></span>
         </li>
         <li v-if="meOutside" class="me gap">
           <span class="rank"><span class="sr-only">Rang </span>{{ me.rank }}</span>
           <span class="name">{{ me.name }}<span class="you"> (vous)</span></span>
-          <span class="score">{{ me.score }}/{{ me.total }}</span>
-          <span class="meta">{{ formatTime(me.time) }}</span>
+          <span class="score">{{ me.points ?? 0 }}<span class="unit"> pts</span></span>
+          <span class="meta"><span>{{ me.score }}/{{ me.total }} justes</span><span>{{ formatTime(me.time) }}</span></span>
         </li>
       </ol>
       <p class="count">{{ data.total }} participation{{ data.total > 1 ? 's' : '' }} classée{{ data.total > 1 ? 's' : '' }}</p>
@@ -59,7 +60,8 @@ const medal = r => (r === 1 ? 'or' : r === 2 ? 'argent' : r === 3 ? 'bronze' : n
 .name { grid-area: name; font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .you { font-weight: 600; color: var(--ink-2); }
 .score { grid-area: score; font-family: var(--font-display); font-weight: 800; font-size: 1.15rem; font-variant-numeric: tabular-nums; }
-.meta { grid-area: meta; display: flex; align-items: center; gap: 8px; color: var(--ink-2); font-size: .85rem; font-variant-numeric: tabular-nums; }
-.meta :deep(.level) { font-size: .75rem; padding: 1px 8px; border-width: 1.5px; }
+.meta { grid-area: meta; display: flex; flex-wrap: wrap; align-items: center; gap: 4px 12px; color: var(--ink-2); font-size: .85rem; font-variant-numeric: tabular-nums; }
+.meta :deep(.quiz-badge) { font-size: .8rem; padding: 0 8px 0 5px; border-width: 1.5px; }
+.unit { font-size: .8rem; font-weight: 700; color: var(--ink-2); }
 .count { margin-top: 10px; font-size: .9rem; color: var(--ink-2); }
 </style>

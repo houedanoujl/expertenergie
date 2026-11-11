@@ -1,20 +1,17 @@
-// Chaque quiz met sous tension une partie du cycle combiné (schéma de l'accueil).
-// La couleur suit le flux de la section : gaz, fumées, électricité, eau-vapeur, réseau.
+// Les trois quiz, indépendants : chacun a sa couleur et son nombre de barres (1 à 3),
+// repris partout où un score s'affiche (QuizBadge). Chaque quiz réussi met aussi sous
+// tension une partie du cycle combiné (schéma de l'accueil).
 export const SECTIONS = {
-  q1: { name: 'Turbine à gaz', short: 'Turbine à gaz', flow: 'Gaz et air', color: '#ed7f06', tint: '#fde6cc' },
-  q2: { name: 'Chaudière de récupération', short: 'Chaudière', flow: 'Fumées chaudes', color: '#c8553d', tint: '#f7ddd7' },
-  q3: { name: 'Alternateur et réseau', short: 'Alternateur', flow: 'Électricité', color: '#f5c242', tint: '#fdf0cc' },
-  q4: { name: 'Cycle eau-vapeur', short: 'Eau-vapeur', flow: 'Eau et vapeur', color: '#3f80c4', tint: '#dbe8f5' },
-  examen: { name: 'Mise sur le réseau', short: 'Réseau', flow: 'Vers Abidjan', color: '#0d9330', tint: '#d6efdc' },
+  debutant: { name: 'Débutant', short: 'Débutant', bars: 1, plant: 'la turbine à gaz', color: '#3f9b5a', tint: '#dff1e4', ink: '#0b6a24' },
+  intermediaire: { name: 'Intermédiaire', short: 'Intermédiaire', bars: 2, plant: 'la chaudière et le cycle eau-vapeur', color: '#ed7f06', tint: '#fde6cc', ink: '#994a00' },
+  expert: { name: 'Expert', short: 'Expert', bars: 3, plant: 'l’alternateur et le réseau', color: '#c8553d', tint: '#f7ddd7', ink: '#9a3322' },
 }
-export const ORDER = ['q1', 'q2', 'q3', 'q4', 'examen']
+export const ORDER = ['debutant', 'intermediaire', 'expert']
 
-// Barème du document (sur 15), appliqué au prorata : calculé côté base (quiz_level).
+// Appréciation selon la part de bonnes réponses, calculée côté serveur (quiz_level) :
+// moins de 8/15 à reprendre, de 8/15 à moins de 12/15 acquis, au-delà maîtrisé.
 export const LEVELS = {
   'a-reprendre': { name: 'À reprendre', ink: '#b3392f', bg: '#fbe3e0' },
   acquis: { name: 'Acquis', ink: '#a85200', bg: '#fff3cc' },
-  expert: { name: 'Niveau expert', ink: '#0b7a28', bg: '#e1f3e5' },
+  expert: { name: 'Maîtrisé', ink: '#0b7a28', bg: '#e1f3e5' },
 }
-
-// Niveaux des questions de l'examen
-export const EXAM_LEVELS = { 1: 'Fondamental', 2: 'Intermédiaire', 3: 'Avancé', 4: 'Expert' }

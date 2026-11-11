@@ -1,6 +1,6 @@
 # Quiz expert énergie
 
-Quiz interactif tiré du document « Quiz expert énergie » : 55 questions corrigées et expliquées sur les centrales à cycle combiné gaz, réparties en 4 quiz d'entraînement et un examen de 15 questions. Il reprend la stack et le langage visuel de [brikelec](https://github.com/houedanoujl/brikelec) : Nuxt 4, Baloo 2 et Nunito, couleurs CIPREL et techniciens guides (voir `DESIGN.md`).
+Trois quiz chronométrés tirés du document « Quiz revus » du client : **débutant**, **intermédiaire** et **expert**, 10 questions chacun, 2 minutes au compte à rebours. Il reprend la stack et le langage visuel de [brikelec](https://github.com/houedanoujl/brikelec) : Nuxt 4, Baloo 2 et Nunito, couleurs CIPREL et techniciens guides (voir `DESIGN.md`).
 
 ```bash
 npm install
@@ -10,10 +10,12 @@ npm run build        # build de production (.output)
 
 ## Parcours
 
-- **Accueil** : un schéma de cycle combiné s'allume section par section au fil des quiz : turbine à gaz, chaudière de récupération, alternateur, cycle eau-vapeur, puis réseau pour l'examen. On y trouve aussi la jauge « Charge de la centrale », 7 récompenses et le classement par quiz.
-- **Entraînement** (quiz 1 à 4) : correction et explication juste après chaque réponse. Les phrases de calcul sont posées à part.
-- **Examen** : réponses définitives et correction complète à la fin. Le niveau suit le barème du document : 0 à 7 à reprendre, 8 à 11 acquis, 12 à 15 niveau expert. Le même barème s'applique au prorata aux quiz de 10.
-- **Réviser mes erreurs** (`?revision=1`) : seulement les questions ratées, hors classement.
+- **Accueil** : l'écran de choix. Les trois quiz sont indépendants, on commence par celui qu'on veut. Chaque quiz réussi met une partie du cycle combiné sous tension (turbine à gaz, chaudière et cycle eau-vapeur, alternateur et réseau). On y trouve aussi la jauge « Charge de la centrale », les récompenses et le classement.
+- **Partie classée** : le compte à rebours part au premier écran de question et ne s'arrête pas. Chaque réponse est définitive, la correction détaillée arrive à la fin, avec un bouton **Choisir un autre quiz** qui ramène à l'accueil.
+- **Échec** : si les 2 minutes s'écoulent avant la dernière question, l'écran « Temps écoulé : échec » s'affiche. La partie n'entre pas au classement.
+- **Points** : 100 par bonne réponse, plus 2 par seconde restante au prorata des bonnes réponses (10/10 avec 45 s restantes : 1 090 points ; 5/10 avec 45 s restantes : 545). Le classement trie par points, puis bonnes réponses, durée et ancienneté.
+- **Repère de quiz** : partout où un score s'affiche (classement, résultat, accueil), une pastille dit de quel quiz il s'agit : couleur, 1 à 3 barres et nom du niveau. Le classement a un onglet « Tous les quiz » et un onglet par quiz.
+- **Réviser mes erreurs** (`?revision=1`) : seulement les questions ratées, sans chrono, corrigées une à une, hors classement.
 - **Partage** :
   - page publique `/resultat/<slug>` (aperçu Open Graph, juste ou faux sans les réponses) ;
   - carte PNG ;
@@ -25,8 +27,8 @@ npm run build        # build de production (.output)
 
 | Fichier | Rôle |
 |---|---|
-| `reference/quiz-expert-energie.docx` | document source du client |
-| `scripts/extract-docx.mjs` | `npm run content:extract` : lit le Word et écrit `supabase/seed/quizzes.json`. La bonne réponse est l'option marquée ✔, contrôlée contre la grille de réponses de fin de document. |
+| `reference/quizzes-revus.docx` | document source du client |
+| `scripts/extract-docx.mjs` | `npm run content:extract` : lit le Word et écrit `supabase/seed/quizzes.json`. La bonne réponse est l'option cochée (✓ ou ✔), contrôlée contre la lettre de l'explication quand elle est donnée. Titres, sous-titres et durée (120 s) sont fixés dans le script. |
 | `scripts/build-seed.mjs` | `npm run content:seed` : génère `supabase/migrations/0002_quiz_seed.sql` (rejouable) |
 
 Pour corriger un texte : modifier le Word, relancer les deux scripts, puis rejouer `0002_quiz_seed.sql`.
@@ -36,19 +38,22 @@ Pour corriger un texte : modifier le Word, relancer les deux scripts, puis rejou
 Projet `yzgbqpmopzhjefyyrzzr`, partagé avec brikelec (table `scores`) : tout ce qui concerne le quiz est préfixé `quiz_`. À faire une fois, dans l'éditeur SQL du projet :
 
 1. `supabase/migrations/0001_quiz.sql` : tables, droits et fonctions.
-2. `supabase/migrations/0002_quiz_seed.sql` : les 5 quiz et les 55 questions.
+2. `supabase/migrations/0003_quiz_chrono.sql` : durée des quiz, points, échec au temps écoulé.
+3. `supabase/migrations/0002_quiz_seed.sql` : les 3 quiz et les 30 questions. **Il supprime les quiz qui ne sont plus au questionnaire, avec leurs tentatives et leur classement.**
+
+> La migration `0003` et le nouveau seed ne sont pas encore appliqués au projet Supabase : la version web en ligne garde les anciens quiz tant qu'ils ne le sont pas. La borne, elle, n'utilise pas Supabase (stockage local).
 
 | Table | Contenu | Accès public |
 |---|---|---|
-| `quiz_quizzes` | les 5 quiz | lecture |
+| `quiz_quizzes` | les 3 quiz et leur durée | lecture |
 | `quiz_questions` | énoncé, choix, corrigé, explication | lecture **sans** `answer` ni `explanation` (droits par colonne) |
-| `quiz_attempts` | pseudo, score, niveau, durée, lien de partage, jeton secret | lecture des parties terminées et classées, sans le jeton |
+| `quiz_attempts` | pseudo, points, bonnes réponses, niveau, durée, échec, lien de partage, jeton secret | lecture des parties terminées, classées et réussies, sans le jeton |
 | `quiz_answers` | chaque réponse, juste ou fausse, et son temps | aucun |
 
 Aucune écriture directe : tout passe par des fonctions `security definer` qui valident côté base.
 - `quiz_start(quiz, pseudo, questions?)` démarre une tentative (sous-ensemble de questions : révision hors classement).
-- `quiz_answer(tentative, jeton, question, choix, temps)` enregistre une réponse (idempotente). Elle renvoie la correction en entraînement, et rien avant la fin à l'examen.
-- `quiz_finish(tentative, jeton)` calcule le score, le niveau et le rang, crée le lien de partage et renvoie la correction complète.
+- `quiz_answer(tentative, jeton, question, choix, temps)` enregistre une réponse (idempotente). Elle renvoie la correction en révision, et rien avant la fin en partie classée. Une partie classée refuse les réponses une fois le temps écoulé.
+- `quiz_finish(tentative, jeton)` calcule les points, le niveau et le rang, crée le lien de partage et renvoie la correction. Une partie classée incomplète est un échec : 0 point, hors classement.
 - `quiz_result(slug)` renvoie le résumé public d'un résultat.
 
 L'API Nitro (`server/api`) relaie ces appels. La clé reste côté serveur.

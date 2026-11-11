@@ -14,7 +14,7 @@ export default defineNuxtConfig({
       title: 'Quiz expert énergie — CIPREL',
       meta: [
         { name: 'viewport', content: 'width=device-width, initial-scale=1, viewport-fit=cover' },
-        { name: 'description', content: '55 questions corrigées sur les centrales à cycle combiné gaz : 4 quiz d’entraînement et un examen, de la turbine à gaz au réseau.' },
+        { name: 'description', content: 'Trois quiz chronométrés sur l’énergie et les centrales à cycle combiné gaz : débutant, intermédiaire, expert. 2 minutes pour 10 questions.' },
         { name: 'theme-color', content: '#ed7f06' },
       ],
       link: [

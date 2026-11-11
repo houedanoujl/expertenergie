@@ -1,7 +1,7 @@
 <script setup>
 // Page publique d'un résultat (lien partagé) : rendue côté serveur pour l'aperçu Open Graph.
 // Elle montre le score et les réponses justes ou fausses, jamais les réponses elles-mêmes.
-import { SECTIONS, LEVELS } from '~/data/sections'
+import { LEVELS } from '~/data/sections'
 import { formatTime, ordinal, atQuiz } from '~/composables/useQuiz'
 
 const route = useRoute()
@@ -13,8 +13,8 @@ const config = useRuntimeConfig()
 const reqUrl = useRequestURL()
 const site = (config.public.siteUrl || reqUrl.origin).replace(/\/$/, '')
 const level = computed(() => LEVELS[r.value.level]?.name || '')
-const title = computed(() => `${r.value.name} : ${r.value.score}/${r.value.total} ${atQuiz(r.value.label)} — Quiz expert énergie`)
-const description = computed(() => `${level.value} sur « ${r.value.title} ». 55 questions corrigées sur les centrales à cycle combiné gaz : relevez le défi !`)
+const title = computed(() => `${r.value.name} : ${r.value.points != null ? `${r.value.points} points, ` : ''}${r.value.score}/${r.value.total} ${atQuiz(r.value.label)} — Quiz expert énergie`)
+const description = computed(() => `${level.value} sur « ${r.value.title} ». Trois quiz chronométrés sur l’énergie et les centrales à cycle combiné gaz : relevez le défi !`)
 
 useSeoMeta({
   title,
@@ -36,23 +36,22 @@ useSeoMeta({
     <section class="panel card" aria-labelledby="r-title">
       <CiprelTechnician variant="homme" :pose="r.level === 'a-reprendre' ? 'think' : 'cheer'" :size="150" class="tech" />
       <div class="body">
-        <p class="where">
-          <span class="swatch" :style="{ background: SECTIONS[r.quiz]?.color }" aria-hidden="true" />
-          {{ r.label }} · {{ SECTIONS[r.quiz]?.name }}
-        </p>
+        <p><QuizBadge :quiz="r.quiz" big /></p>
         <h1 id="r-title">{{ r.name }} a obtenu</h1>
-        <p class="score"><span class="big">{{ r.score }}</span><span class="of">/{{ r.total }}</span></p>
+        <p v-if="r.points != null && !r.failed" class="score"><span class="big">{{ r.points }}</span><span class="of"> points</span></p>
+        <p v-else class="score"><span class="big">{{ r.score }}</span><span class="of">/{{ r.total }}</span></p>
         <LevelPill :level="r.level" big />
         <p class="quiz">« {{ r.title }} »</p>
         <QuestionDots :items="r.pattern.map(ok => ({ state: ok ? 'right' : 'wrong' }))" label="Résultat" />
         <div class="chips">
+          <span v-if="r.points != null" class="chip"><AppIcon name="check" :size="18" />{{ r.score }}/{{ r.total }} bonnes réponses</span>
           <span class="chip"><AppIcon name="clock" :size="18" />{{ formatTime(r.duration) }}</span>
           <span v-if="r.rank" class="chip"><AppIcon name="trophy" :size="18" />{{ ordinal(r.rank) }} sur {{ r.players }}</span>
-          <span v-else class="chip">Révision, hors classement</span>
+          <span v-else class="chip">{{ r.failed ? 'Temps écoulé, hors classement' : 'Révision, hors classement' }}</span>
         </div>
         <div class="buttons">
           <NuxtLink class="btn" :to="`/quiz/${r.quiz}?defi=${r.slug}`"><AppIcon name="target" :size="20" />Relever le défi</NuxtLink>
-          <NuxtLink class="btn ghost" to="/">Découvrir les 5 quiz</NuxtLink>
+          <NuxtLink class="btn ghost" to="/">Découvrir les 3 quiz</NuxtLink>
         </div>
       </div>
     </section>

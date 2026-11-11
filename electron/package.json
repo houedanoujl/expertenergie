@@ -1,7 +1,7 @@
 {
   "name": "quiz-expert-energie-borne",
   "productName": "Quiz expert energie",
-  "version": "1.0.0-beta.1",
+  "version": "1.0.0-beta.2",
   "description": "Quiz expert énergie (CIPREL) pour borne tactile, hors ligne",
   "author": "CIPREL",
   "private": true,

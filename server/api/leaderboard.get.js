@@ -1,4 +1,4 @@
-// Classement d'un quiz : score décroissant, puis temps, puis ancienneté.
+// Classement d'un quiz (ou de tous : quiz=all) : points décroissants, puis bonnes réponses, temps, ancienneté.
 export default defineEventHandler(async (event) => {
   const { quiz, limit = 20 } = getQuery(event)
   if (!isQuizId(quiz)) throw createError({ statusCode: 400, statusMessage: 'Quiz introuvable.' })

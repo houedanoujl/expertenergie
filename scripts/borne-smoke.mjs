@@ -64,15 +64,24 @@ async function devtools () {
 let failed = null
 try {
   const quizzes = await until('serveur', () => json('/api/quizzes'))
-  if (quizzes.length !== 5) throw new Error(`${quizzes.length} quiz au lieu de 5`)
+  if (quizzes.length !== 3) throw new Error(`${quizzes.length} quiz au lieu de 3`)
+  if (quizzes.some(q => q.time_limit !== 120)) throw new Error('durée des quiz : 120 s attendues')
 
-  const a = await json('/api/attempts', { quiz: 'q1', name: 'Test CI' })
-  for (const q of a.questions) await json(`/api/attempts/${a.attempt}/answer`, { token: a.token, question: q, choice: 'A', time: 1000 })
+  const a = await json('/api/attempts', { quiz: 'debutant', name: 'Test CI' })
+  for (const q of a.questions) await json(`/api/attempts/${a.attempt}/answer`, { token: a.token, question: q, choice: 'B', time: 1000 })
   const f = await json(`/api/attempts/${a.attempt}/finish`, { token: a.token })
-  console.log(`partie enregistrée : ${f.score}/${f.total}, rang ${f.rank}/${f.players}`)
+  console.log(`partie enregistrée : ${f.points} points, ${f.score}/${f.total}, rang ${f.rank}/${f.players}`)
+  if (a.limit !== 120 || f.failed || f.rank !== 1 || !(f.points > f.score * 100)) throw new Error('partie chronométrée : ' + JSON.stringify({ limit: a.limit, failed: f.failed, rank: f.rank, points: f.points }))
+
+  // partie abandonnée avant la fin : échec, hors classement
+  const b = await json('/api/attempts', { quiz: 'expert', name: 'Test CI' })
+  await json(`/api/attempts/${b.attempt}/answer`, { token: b.token, question: b.questions[0], choice: 'A', time: 1000 })
+  const g = await json(`/api/attempts/${b.attempt}/finish`, { token: b.token })
+  const board = await json('/api/leaderboard?quiz=all')
+  if (!g.failed || g.rank || g.points !== 0 || board.total !== 1 || board.entries[0].quiz !== 'debutant') throw new Error('échec au chrono : ' + JSON.stringify({ g: { failed: g.failed, rank: g.rank, points: g.points }, board }))
 
   const page = await devtools()
-  await until('accueil affiché', () => page.evaluate(`document.querySelectorAll('.steps .step').length === 5`), 60e3)
+  await until('accueil affiché', () => page.evaluate(`document.querySelectorAll('.steps .step').length === 3`), 60e3)
   const check = await page.evaluate(`document.fonts.ready.then(() => ({
     kiosk: document.documentElement.classList.contains('kiosk'),
     fonts: document.fonts.check('800 20px "Baloo 2"') && document.fonts.check('600 16px Nunito'),
@@ -83,7 +92,7 @@ try {
   if (!check.kiosk || !check.fonts || !check.bridge) throw new Error('page incomplète : ' + JSON.stringify(check))
   await sleep(1000)
   await page.shot('1-accueil')
-  await page.evaluate(`location.assign('/quiz/q1')`)
+  await page.evaluate(`location.assign('/quiz/debutant')`)
   await until('clavier à l’écran', () => page.evaluate(`!!document.querySelector('.kbd .key')`), 30e3)
   await sleep(1000)
   await page.shot('2-quiz')

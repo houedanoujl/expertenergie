@@ -11,16 +11,21 @@ const out = resolve(root, 'supabase/migrations/0002_quiz_seed.sql')
 const s = v => (v === null || v === undefined ? 'null' : typeof v === 'string' ? `'${v.replace(/'/g, "''")}'` : String(v))
 
 const lines = [
-  '-- Contenu du « Quiz expert énergie » : 5 quiz, 55 questions corrigées.',
+  `-- Contenu du quiz : ${quizzes.length} quiz, ${quizzes.reduce((n, q) => n + q.questions.length, 0)} questions corrigées.`,
   '-- Généré par scripts/build-seed.mjs : ne pas modifier à la main.',
-  '-- Idempotent : peut être rejoué pour mettre à jour les textes.',
+  '-- À rejouer après 0003_quiz_chrono.sql (colonne time_limit). Idempotent.',
+  '-- ATTENTION : les quiz absents du questionnaire sont supprimés, avec leurs questions,',
+  '-- leurs tentatives et leur classement (suppression en cascade).',
   '',
   'begin;',
   '',
-  'insert into public.quiz_quizzes (id, label, title, subtitle, mode, position) values',
-  quizzes.map(q => `  (${[q.id, q.label, q.title, q.subtitle, q.mode, q.position].map(s).join(', ')})`).join(',\n'),
+  `delete from public.quiz_quizzes where id not in (${quizzes.map(q => s(q.id)).join(', ')});`,
+  `delete from public.quiz_questions where id not in (${quizzes.flatMap(z => z.questions.map(q => s(q.id))).join(', ')});`,
+  '',
+  'insert into public.quiz_quizzes (id, label, title, subtitle, mode, position, time_limit) values',
+  quizzes.map(q => `  (${[q.id, q.label, q.title, q.subtitle, q.mode, q.position, q.time_limit ?? null].map(s).join(', ')})`).join(',\n'),
   'on conflict (id) do update set label = excluded.label, title = excluded.title,',
-  '  subtitle = excluded.subtitle, mode = excluded.mode, position = excluded.position;',
+  '  subtitle = excluded.subtitle, mode = excluded.mode, position = excluded.position, time_limit = excluded.time_limit;',
   '',
   'insert into public.quiz_questions (id, quiz_id, position, level, prompt, choices, answer, explanation, calc) values',
   quizzes.flatMap(z => z.questions.map(q =>

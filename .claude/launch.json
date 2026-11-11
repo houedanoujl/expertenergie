@@ -1,6 +1,7 @@
 {
   "version": "0.0.1",
   "configurations": [
-    { "name": "nuxt-dev", "runtimeExecutable": "npm", "runtimeArgs": ["run", "dev", "--", "--port", "3000"], "port": 3000 }
+    { "name": "nuxt-dev", "runtimeExecutable": "npm", "runtimeArgs": ["run", "dev", "--", "--port", "3000"], "port": 3000 },
+    { "name": "borne-dev", "runtimeExecutable": "env", "runtimeArgs": ["NUXT_STORAGE=local", "NUXT_PUBLIC_KIOSK=true", "NUXT_DATA_DIR=.data/kiosk-dev", "npm", "run", "dev", "--", "--port", "3010"], "port": 3010 }
   ]
 }

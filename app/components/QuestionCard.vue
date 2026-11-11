@@ -2,7 +2,6 @@
 // Une question et ses 4 réponses : boutons radio natifs (flèches au clavier),
 // habillés en pilules avec la pastille A à D. Après correction, la bonne réponse
 // passe au vert et la réponse choisie, si elle est fausse, au rouge.
-import { EXAM_LEVELS } from '~/data/sections'
 
 const props = defineProps({
   question: { type: Object, required: true }, // { id, position, level, prompt, choices }
@@ -34,7 +33,7 @@ const legendId = computed(() => `q-${props.question.id}`)
     <fieldset :aria-describedby="`${legendId}-meta`">
       <legend :id="legendId" class="prompt">
         <span :id="`${legendId}-meta`" class="meta">
-          Question {{ number }} sur {{ total }}<template v-if="question.level"> · Niveau {{ question.level }}, {{ EXAM_LEVELS[question.level].toLowerCase() }}</template>
+          Question {{ number }} sur {{ total }}
         </span>
         <RichText :text="question.prompt" />
       </legend>

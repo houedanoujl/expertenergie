@@ -1,10 +1,10 @@
 <script setup>
 // Un quiz : présentation et pseudo, questions une par une, puis résultat.
-// Entraînement : correction et explication après chaque réponse.
-// Examen : réponses définitives, correction complète à la fin.
-// Révision (?revision=1) : seulement les questions ratées, hors classement.
+// Partie classée : compte à rebours (2 minutes), réponses définitives, correction complète à la fin.
+// Temps écoulé avant la dernière question : échec, hors classement.
+// Révision (?revision=1) : seulement les questions ratées, sans chrono, corrigées une à une, hors classement.
 // Défi (?defi=<slug>) : le score d'un collègue à battre.
-import { SECTIONS, ORDER } from '~/data/sections'
+import { SECTIONS } from '~/data/sections'
 import { formatTime, ordinal } from '~/composables/useQuiz'
 
 const route = useRoute()
@@ -52,9 +52,22 @@ const dots = computed(() => (cur.value?.questions || []).map((q, i) => {
   return { state: i === cur.value.index ? 'current' : 'todo' }
 }))
 
-// Chrono : temps de réflexion cumulé, la question affichée comprise
+// Chrono : temps de réflexion cumulé, la question affichée comprise (révision)
 const now = ref(0)
 let timer = null
+// Compte à rebours d'une partie classée : il court depuis le départ, sans pause
+const clock = ref(0)
+const limit = computed(() => cur.value?.limit || 0)
+const remaining = computed(() => (limit.value ? Math.max(0, limit.value - (clock.value - cur.value.startedAt) / 1000) : 0))
+let ending = false
+function tick () {
+  now.value = performance.now()
+  clock.value = Date.now()
+  if (!limit.value || remaining.value > 0 || busy.value) return
+  if (phase.value === 'play') end()
+  // partie laissée en plan (rechargement, retour à l'accueil) et temps écoulé : on repart de zéro
+  else if (phase.value === 'intro') game.abandon()
+}
 const elapsed = computed(() => {
   if (!cur.value) return 0
   const live = phase.value === 'play' && !answered.value ? Math.max(0, now.value - shownAt) : 0
@@ -64,7 +77,8 @@ const elapsed = computed(() => {
 onMounted(() => {
   mounted.value = true
   nameInput.value = state.value.name
-  timer = setInterval(() => { now.value = performance.now() }, 500)
+  tick()
+  timer = setInterval(tick, 250)
   window.addEventListener('keydown', onKey)
 })
 onBeforeUnmount(() => {
@@ -111,6 +125,13 @@ function restart () {
   begin(wantsReview.value && reviewCount.value > 0)
 }
 
+// Depuis l'écran de résultat : une nouvelle partie classée, avec le même pseudo
+function replay () {
+  result.value = null
+  phase.value = 'intro'
+  begin(false)
+}
+
 async function submit () {
   if (!selected.value || answered.value || busy.value) return
   busy.value = true
@@ -146,14 +167,17 @@ async function advance () {
   }
 }
 
+// Fin de partie : dernière réponse donnée, ou temps écoulé (le serveur conclut alors à l'échec)
 async function end () {
+  if (ending) return
+  ending = true
   busy.value = true
   err.value = ''
   try {
     const r = await game.finish(quiz.value.questions, calcTotal.value)
     result.value = r
     phase.value = 'result'
-    play(r.level === 'expert' ? 'fanfare' : 'complete')
+    play(r.failed ? 'wrong' : r.level === 'expert' ? 'fanfare' : 'complete')
     nextTick(() => {
       window.scrollTo({ top: 0 })
       document.getElementById('result-title')?.focus()
@@ -162,6 +186,7 @@ async function end () {
     err.value = e?.data?.statusMessage || 'Résultat indisponible pour le moment : réessayez.'
   } finally {
     busy.value = false
+    ending = false
   }
 }
 
@@ -190,7 +215,6 @@ const reaction = computed(() => {
 const choiceText = (q, letter) => q?.choices[LETTERS.indexOf(letter)]
 
 // Résultat
-const nextQuiz = computed(() => ORDER.find(x => x !== id && !state.value.done.includes(x)) || null)
 const LEVEL_MSG = {
   expert: 'Maîtrise confirmée sur ce thème.',
   acquis: 'Quelques points à consolider avec la correction ci-dessous.',
@@ -215,13 +239,15 @@ const onShared = () => game.award('partage')
       <NuxtLink class="btn ghost icon" to="/" aria-label="Retour à l’accueil"><AppIcon name="home" /></NuxtLink>
       <p class="where">
         <span class="swatch" :style="{ background: section.color }" aria-hidden="true" />
-        <span><strong>{{ quiz?.label }}</strong><span class="sec-name"> · {{ section.name }}</span></span>
+        <span><strong>{{ quiz?.label }}</strong></span>
       </p>
       <template v-if="phase === 'play' && cur">
         <span class="chip"><span><span class="sr-only">Question </span>{{ cur.index + 1 }}<span class="muted">/{{ cur.questions.length }}</span></span></span>
-        <span class="chip"><AppIcon name="clock" :size="18" /><span class="sr-only">Temps </span>{{ formatTime(elapsed) }}</span>
+        <span v-if="limit" class="chip timer" :class="{ low: remaining <= 15 }" role="timer"><AppIcon name="clock" :size="18" /><span class="sr-only">Temps restant </span>{{ formatTime(Math.ceil(remaining)) }}</span>
+        <span v-else class="chip"><AppIcon name="clock" :size="18" /><span class="sr-only">Temps </span>{{ formatTime(elapsed) }}</span>
       </template>
       <SoundToggle class="sound" />
+      <span v-if="phase === 'play' && limit" class="timebar" :class="{ low: remaining <= 15 }" aria-hidden="true"><span :style="{ width: `${(remaining / limit) * 100}%` }" /></span>
     </header>
 
     <p v-if="loadError" class="state panel">
@@ -232,6 +258,7 @@ const onShared = () => game.award('partage')
     <!-- Présentation -->
     <section v-else-if="phase === 'intro'" class="intro" aria-labelledby="intro-title">
       <div class="panel intro-main">
+        <p><QuizBadge :quiz="id" big /></p>
         <h1 id="intro-title">{{ quiz?.title }}</h1>
         <p class="topics">{{ quiz?.subtitle }}</p>
 
@@ -243,18 +270,14 @@ const onShared = () => game.award('partage')
         <ul class="rules">
           <template v-if="wantsReview && reviewCount && !cur">
             <li><AppIcon name="rotate" /> {{ reviewCount }} question{{ reviewCount > 1 ? 's' : '' }} ratée{{ reviewCount > 1 ? 's' : '' }} à retravailler</li>
-            <li><AppIcon name="bulb" /> Correction et explication après chaque réponse{{ isExam ? ' (même pour l’examen)' : '' }}</li>
-            <li><AppIcon name="info" /> Hors classement : votre meilleur score ne change pas</li>
-          </template>
-          <template v-else-if="isExam">
-            <li><AppIcon name="flag" /> {{ quiz?.questions.length }} questions sur quatre niveaux : fondamental, intermédiaire, avancé, expert</li>
-            <li><AppIcon name="check" /> Chaque réponse est définitive : la correction complète arrive à la fin</li>
-            <li><AppIcon name="star" /> Barème : 0 à 7 à reprendre, 8 à 11 acquis, 12 à 15 niveau expert</li>
+            <li><AppIcon name="bulb" /> Sans chrono : correction et explication après chaque réponse</li>
+            <li><AppIcon name="info" /> Hors classement : votre record ne change pas</li>
           </template>
           <template v-else>
-            <li><AppIcon name="grid" /> {{ quiz?.questions.length }} questions à quatre choix</li>
-            <li><AppIcon name="bulb" /> Correction et explication juste après chaque réponse</li>
-            <li><AppIcon name="trophy" /> Votre score entre au classement du quiz</li>
+            <li><AppIcon name="grid" /> {{ quiz?.questions.length }} questions à quatre choix, chaque réponse est définitive</li>
+            <li><AppIcon name="clock" /> {{ formatTime(quiz?.time_limit || 120) }} au compte à rebours : si le temps s’écoule avant la dernière question, c’est un échec</li>
+            <li><AppIcon name="star" /> 100 points par bonne réponse, plus un bonus pour chaque seconde restante</li>
+            <li><AppIcon name="flag" /> La correction détaillée s’affiche à la fin</li>
           </template>
         </ul>
 
@@ -289,7 +312,7 @@ const onShared = () => game.award('partage')
         variant="homme"
         pose="point"
         :size="130"
-        :text="isExam ? 'Prenez votre temps : à l’examen, on ne voit la correction qu’à la fin.' : 'Lisez bien les quatre réponses : l’explication suit chaque question.'"
+        :text="wantsReview && reviewCount ? 'Prenez votre temps : en révision, l’explication suit chaque question.' : 'Le chrono démarre dès que vous commencez. Une bonne réponse rapporte plus qu’une seconde gagnée !'"
       />
     </section>
 
@@ -310,7 +333,7 @@ const onShared = () => game.award('partage')
       >
         <div v-if="!answered" class="validate">
           <button class="btn" type="submit" :disabled="!selected || busy">
-            {{ isExam ? (isLast ? 'Valider et terminer' : 'Valider ma réponse') : 'Valider' }}
+            {{ isLast && limit ? 'Valider et terminer' : 'Valider' }}
           </button>
           <p v-if="!kiosk" class="help">Touches A à D pour choisir, Entrée pour valider.</p>
         </div>
@@ -344,35 +367,47 @@ const onShared = () => game.award('partage')
 
     <!-- Résultat -->
     <section v-else-if="phase === 'result' && result" class="result" aria-labelledby="result-title">
-      <div class="panel res-main">
-        <CiprelTechnician class="res-tech" variant="femme" :pose="result.level === 'a-reprendre' ? 'think' : 'cheer'" :size="150" />
+      <div class="panel res-main" :class="{ failed: result.failed }">
+        <CiprelTechnician class="res-tech" variant="femme" :pose="result.failed || result.level === 'a-reprendre' ? 'think' : 'cheer'" :size="150" />
         <div class="res-body">
-          <h1 id="result-title" tabindex="-1">{{ result.review ? 'Révision terminée' : `${quiz.label} terminé` }}</h1>
-          <p class="score"><span class="big">{{ result.score }}</span><span class="of">/{{ result.total }}</span></p>
-          <LevelPill :level="result.level" big />
-          <p class="msg">{{ LEVEL_MSG[result.level] }}</p>
-          <QuestionDots :items="result.corrections.map(c => ({ state: c.correct ? 'right' : 'wrong' }))" label="Résultat" />
-          <div class="chips">
-            <span class="chip"><AppIcon name="clock" :size="18" />{{ formatTime(result.duration) }}</span>
-            <span v-if="result.rank" class="chip"><AppIcon name="trophy" :size="18" />{{ ordinal(result.rank) }} sur {{ result.players }}</span>
-            <span v-else class="chip muted-chip">Hors classement</span>
-            <span v-if="defi && !result.review" class="chip" :class="result.score > defi.score || (result.score === defi.score && result.duration < defi.duration) ? 'win' : ''">
-              <AppIcon name="target" :size="18" />
-              {{ result.score > defi.score || (result.score === defi.score && result.duration < defi.duration) ? `Défi de ${defi.name} relevé !` : `Défi de ${defi.name} : ${defi.score}/${defi.total}` }}
-            </span>
-          </div>
+          <p><QuizBadge :quiz="id" big /></p>
+          <template v-if="result.failed">
+            <h1 id="result-title" tabindex="-1">Temps écoulé : échec</h1>
+            <p class="fail-tag"><AppIcon name="clock" :size="22" />Quiz non terminé</p>
+            <p class="msg">
+              Vous avez répondu à {{ result.answered }} question{{ result.answered > 1 ? 's' : '' }} sur {{ result.total }} en {{ result.limit % 60 ? formatTime(result.limit) : `${result.limit / 60} minute${result.limit > 60 ? 's' : ''}` }}<template v-if="result.answered">, dont {{ result.score }} juste{{ result.score > 1 ? 's' : '' }}</template>.
+              La partie n’entre pas au classement : retentez votre chance !
+            </p>
+          </template>
+          <template v-else>
+            <h1 id="result-title" tabindex="-1">{{ result.review ? 'Révision terminée' : `${quiz.label} terminé` }}</h1>
+            <p v-if="result.points != null" class="score"><span class="big">{{ result.points }}</span><span class="of"> point{{ result.points > 1 ? 's' : '' }}</span></p>
+            <p v-else class="score"><span class="big">{{ result.score }}</span><span class="of">/{{ result.total }}</span></p>
+            <LevelPill :level="result.level" big />
+            <p class="msg">{{ LEVEL_MSG[result.level] }}</p>
+            <QuestionDots :items="result.corrections.map(c => ({ state: c.correct ? 'right' : 'wrong' }))" label="Résultat" />
+            <div class="chips">
+              <span v-if="result.points != null" class="chip"><AppIcon name="check" :size="18" />{{ result.score }}/{{ result.total }} bonnes réponses</span>
+              <span class="chip"><AppIcon name="clock" :size="18" />{{ formatTime(result.duration) }}</span>
+              <span v-if="result.rank" class="chip"><AppIcon name="trophy" :size="18" />{{ ordinal(result.rank) }} sur {{ result.players }}</span>
+              <span v-else class="chip muted-chip">Hors classement</span>
+              <span v-if="defi && !result.review" class="chip" :class="result.score > defi.score || (result.score === defi.score && result.duration < defi.duration) ? 'win' : ''">
+                <AppIcon name="target" :size="18" />
+                {{ result.score > defi.score || (result.score === defi.score && result.duration < defi.duration) ? `Défi de ${defi.name} relevé !` : `Défi de ${defi.name} : ${defi.score}/${defi.total}` }}
+              </span>
+            </div>
+          </template>
           <div class="buttons">
-            <NuxtLink v-if="nextQuiz" class="btn" :to="`/quiz/${nextQuiz}`">
-              {{ nextQuiz === 'examen' ? 'Passer l’examen' : `Quiz suivant : ${SECTIONS[nextQuiz].name.toLowerCase()}` }}<AppIcon name="next" :size="18" />
-            </NuxtLink>
-            <a v-if="wrongCount" class="btn ghost" :href="`/quiz/${id}?revision=1`"><AppIcon name="rotate" :size="18" />Réviser {{ wrongCount }} erreur{{ wrongCount > 1 ? 's' : '' }}</a>
-            <NuxtLink class="btn ghost" to="/"><AppIcon name="home" :size="18" />Accueil</NuxtLink>
+            <NuxtLink class="btn" :class="{ ghost: result.failed }" to="/"><AppIcon name="home" :size="18" />Choisir un autre quiz</NuxtLink>
+            <button class="btn" :class="{ ghost: !result.failed }" type="button" :disabled="busy" @click="replay"><AppIcon name="refresh" :size="18" />{{ result.failed ? 'Réessayer' : 'Rejouer' }}</button>
+            <a v-if="wrongCount && !result.failed" class="btn ghost" :href="`/quiz/${id}?revision=1`"><AppIcon name="rotate" :size="18" />Réviser {{ wrongCount }} erreur{{ wrongCount > 1 ? 's' : '' }}</a>
           </div>
+          <p v-if="err" class="field-error" role="alert">{{ err }}</p>
         </div>
       </div>
 
-      <section class="panel corrections" aria-labelledby="corr-title">
-        <h2 id="corr-title">Correction détaillée</h2>
+      <section v-if="result.corrections.length" class="panel corrections" aria-labelledby="corr-title">
+        <h2 id="corr-title">{{ result.failed ? 'Correction des questions répondues' : 'Correction détaillée' }}</h2>
         <ol>
           <li v-for="c in result.corrections" :key="c.question">
             <details :open="isExam && !c.correct">
@@ -390,11 +425,11 @@ const onShared = () => game.award('partage')
         </ol>
       </section>
 
-      <ShareResult v-if="!kiosk && !result.review && shareData" :result="shareData" :done="state.done" @shared="onShared" />
+      <ShareResult v-if="!kiosk && !result.review && !result.failed && shareData" :result="shareData" :done="state.done" @shared="onShared" />
 
-      <section v-if="!result.review" class="panel board" aria-labelledby="board-title">
-        <h2 id="board-title">Classement · {{ quiz.label }}</h2>
-        <LeaderboardPanel :quiz="id" :highlight="result.slug" :me="result.rank ? { rank: result.rank, name: result.name, score: result.score, total: result.total, time: result.duration } : null" />
+      <section v-if="!result.review && !result.failed" class="panel board" aria-labelledby="board-title">
+        <h2 id="board-title">Classement <QuizBadge :quiz="id" /></h2>
+        <LeaderboardPanel :quiz="id" :highlight="result.slug" :me="result.rank ? { rank: result.rank, name: result.name, points: result.points, score: result.score, total: result.total, time: result.duration } : null" />
         <p v-if="!kiosk" class="permalink"><AppIcon name="link" :size="16" /> <NuxtLink :to="`/resultat/${result.slug}`">Lien permanent de ce résultat</NuxtLink></p>
       </section>
     </section>
@@ -406,10 +441,14 @@ const onShared = () => game.award('partage')
 .bar { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; position: sticky; top: 0; z-index: 5; padding: 8px 0; background: var(--bg); }
 .where { flex: 1; min-width: 0; display: flex; align-items: center; gap: 8px; font-family: var(--font-display); font-size: 1.05rem; }
 .where span:last-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.where .sec-name { display: none; }
 .bar.playing .where { visibility: hidden; }
 .bar.playing .sound { margin-left: auto; }
 .swatch { flex: none; width: 18px; height: 18px; border-radius: 50%; border: 2.5px solid var(--ink); }
+.chip.timer { font-variant-numeric: tabular-nums; font-weight: 800; min-width: 86px; justify-content: center; }
+.chip.timer.low { background: #fbe3e0; border-color: var(--bad); color: var(--bad); }
+.timebar { flex-basis: 100%; height: 8px; border-radius: 999px; background: var(--surface); border: 2px solid var(--ink); overflow: hidden; }
+.timebar span { display: block; height: 100%; background: var(--green); transition: width .25s linear; }
+.timebar.low span { background: var(--bad); }
 .state { padding: 18px; display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
 
 .intro { display: grid; gap: 18px; }
@@ -459,6 +498,13 @@ const onShared = () => game.award('partage')
 .score .big { font-size: clamp(4rem, 14vw, 6rem); }
 .score .of { font-size: clamp(2rem, 6vw, 2.8rem); color: var(--ink-2); }
 .msg { font-weight: 600; max-width: 52ch; }
+.res-main.failed { box-shadow: inset 0 0 0 3px var(--bad), var(--shadow); }
+.fail-tag {
+  display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px; border-radius: 999px;
+  border: 3px solid var(--bad); background: #fbe3e0; color: var(--bad);
+  font-family: var(--font-display); font-weight: 700; font-size: 1.15rem;
+}
+.board h2 { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
 .chips { display: flex; flex-wrap: wrap; gap: 8px; }
 .chip.win { background: #e1f3e5; border-color: var(--ok); color: var(--ok); }
 .muted-chip { color: var(--ink-2); }
@@ -477,9 +523,6 @@ const onShared = () => game.award('partage')
 
 @media (min-width: 480px) {
   .bar.playing .where { visibility: visible; }
-}
-@media (min-width: 560px) {
-  .where .sec-name { display: inline; }
 }
 @media (min-width: 768px) {
   .page { padding: 16px 24px 56px; }
