@@ -1,13 +1,10 @@
 -- Contenu du quiz : 3 quiz, 30 questions corrigées.
 -- Généré par scripts/build-seed.mjs : ne pas modifier à la main.
 -- À rejouer après 0003_quiz_chrono.sql (colonne time_limit). Idempotent.
--- ATTENTION : les quiz absents du questionnaire sont supprimés, avec leurs questions,
--- leurs tentatives et leur classement (suppression en cascade).
+-- Les quiz absents du questionnaire sont archivés, pas supprimés : ils ne sont plus
+-- proposés ni classés, mais leurs tentatives et leurs liens de résultat restent.
 
 begin;
-
-delete from public.quiz_quizzes where id not in ('debutant', 'intermediaire', 'expert');
-delete from public.quiz_questions where id not in ('debutant-01', 'debutant-02', 'debutant-03', 'debutant-04', 'debutant-05', 'debutant-06', 'debutant-07', 'debutant-08', 'debutant-09', 'debutant-10', 'intermediaire-01', 'intermediaire-02', 'intermediaire-03', 'intermediaire-04', 'intermediaire-05', 'intermediaire-06', 'intermediaire-07', 'intermediaire-08', 'intermediaire-09', 'intermediaire-10', 'expert-01', 'expert-02', 'expert-03', 'expert-04', 'expert-05', 'expert-06', 'expert-07', 'expert-08', 'expert-09', 'expert-10');
 
 insert into public.quiz_quizzes (id, label, title, subtitle, mode, position, time_limit) values
   ('debutant', 'Quiz débutant', 'Les bases de l’électricité et des centrales', 'Unités, équipements, sources d’énergie et sécurité électrique.', 'examen', 1, 120),
@@ -50,5 +47,7 @@ insert into public.quiz_questions (id, quiz_id, position, level, prompt, choices
 on conflict (id) do update set quiz_id = excluded.quiz_id, position = excluded.position, level = excluded.level,
   prompt = excluded.prompt, choices = excluded.choices, answer = excluded.answer,
   explanation = excluded.explanation, calc = excluded.calc;
+
+update public.quiz_quizzes set archived = id not in ('debutant', 'intermediaire', 'expert');
 
 commit;

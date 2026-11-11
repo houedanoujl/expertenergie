@@ -4,6 +4,9 @@
 -- Même logique que le stockage local de la borne (server/backends/local.js).
 
 alter table public.quiz_quizzes  add column if not exists time_limit integer check (time_limit > 0);
+-- Quiz retiré du questionnaire : il n'est plus proposé ni classé, mais ses tentatives,
+-- son classement et ses liens de résultat sont conservés (rien n'est supprimé).
+alter table public.quiz_quizzes  add column if not exists archived boolean not null default false;
 alter table public.quiz_attempts add column if not exists points integer;
 alter table public.quiz_attempts add column if not exists failed boolean not null default false;
 

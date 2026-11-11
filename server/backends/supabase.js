@@ -4,7 +4,7 @@
 
 export async function listQuizzes () {
   const [{ rows: quizzes }, { rows: questions }] = await Promise.all([
-    sbSelect('quiz_quizzes', { select: 'id,label,title,subtitle,mode,position,time_limit', order: 'position.asc' }),
+    sbSelect('quiz_quizzes', { select: 'id,label,title,subtitle,mode,position,time_limit', archived: 'eq.false', order: 'position.asc' }),
     sbSelect('quiz_questions', { select: 'quiz_id,calc' }),
   ])
   return quizzes.map(q => {
@@ -15,7 +15,7 @@ export async function listQuizzes () {
 
 export async function getQuiz (id) {
   const [{ rows: quizzes }, { rows: questions }] = await Promise.all([
-    sbSelect('quiz_quizzes', { select: 'id,label,title,subtitle,mode,position,time_limit', id: `eq.${id}` }),
+    sbSelect('quiz_quizzes', { select: 'id,label,title,subtitle,mode,position,time_limit', id: `eq.${id}`, archived: 'eq.false' }),
     sbSelect('quiz_questions', { select: 'id,position,level,prompt,choices,calc', quiz_id: `eq.${id}`, order: 'position.asc' }),
   ])
   return quizzes.length ? { ...quizzes[0], questions } : null
@@ -33,10 +33,13 @@ export const finish = ({ attempt, token }) =>
 export const result = slug => sbRpc('quiz_result', { p_slug: slug })
 
 export async function leaderboard (quiz, limit) {
-  // les échecs (temps écoulé) ne sont pas lisibles : la politique RLS les écarte
+  // les échecs (temps écoulé) ne sont pas lisibles : la politique RLS les écarte ;
+  // « tous les quiz » : seulement ceux du questionnaire actuel, pas les quiz archivés
+  let ids = [quiz]
+  if (quiz === 'all') ids = (await sbSelect('quiz_quizzes', { select: 'id', archived: 'eq.false' })).rows.map(q => q.id)
   const { rows, total } = await sbSelect('quiz_attempts', {
     select: 'quiz_id,name,points,score,total,duration_s,level,share_slug,finished_at',
-    ...(quiz === 'all' ? {} : { quiz_id: `eq.${quiz}` }),
+    quiz_id: `in.(${ids.join(',')})`,
     order: 'points.desc.nullslast,score.desc,duration_s.asc,finished_at.asc',
     limit,
   }, { count: true })

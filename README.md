@@ -39,9 +39,9 @@ Projet `yzgbqpmopzhjefyyrzzr`, partagé avec brikelec (table `scores`) : tout ce
 
 1. `supabase/migrations/0001_quiz.sql` : tables, droits et fonctions.
 2. `supabase/migrations/0003_quiz_chrono.sql` : durée des quiz, points, échec au temps écoulé.
-3. `supabase/migrations/0002_quiz_seed.sql` : les 3 quiz et les 30 questions. **Il supprime les quiz qui ne sont plus au questionnaire, avec leurs tentatives et leur classement.**
+3. `supabase/migrations/0002_quiz_seed.sql` : les 3 quiz et les 30 questions. Les quiz qui ne sont plus au questionnaire sont archivés (`archived`), pas supprimés : leurs tentatives et leurs liens de résultat restent.
 
-> La migration `0003` et le nouveau seed ne sont pas encore appliqués au projet Supabase : la version web en ligne garde les anciens quiz tant qu'ils ne le sont pas. La borne, elle, n'utilise pas Supabase (stockage local).
+> Ordre de mise en ligne de la version web : appliquer `0003` puis `0002` **avant** de déployer le code. L'ancien code continue de fonctionner sur la base migrée, alors que le nouveau code a besoin des nouvelles colonnes. La borne, elle, n'utilise pas Supabase (stockage local).
 
 | Table | Contenu | Accès public |
 |---|---|---|
