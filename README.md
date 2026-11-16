@@ -96,7 +96,7 @@ L'étiquette `borne-v*` lance `.github/workflows/borne-windows.yml` : build sur 
   - clavier AZERTY à l'écran pour le pseudo ;
   - « Toujours là ? » après `idleSeconds` sans toucher l'écran, puis remise à zéro du joueur ;
   - bouton « Nouveau joueur ».
-- **Administration** : 5 touchers sur le logo de l'accueil, puis le code. On peut y exporter les résultats en CSV (tentatives, réponses et copie du journal), redémarrer l'écran ou quitter l'application. Le code est vérifié par le processus principal. `Ctrl+Maj+Q` quitte aussi l'application.
+- **Administration** : bouton ⏻ en haut à droite de l'accueil (ou 5 touchers sur le logo), puis le code. On peut y exporter les résultats en CSV (tentatives, réponses et copie du journal), redémarrer l'écran ou quitter l'application. Le code est vérifié par le processus principal. `Ctrl+Maj+Q` quitte aussi l'application.
 - **Fichiers sur la borne**, dans `%APPDATA%\quiz-expert-energie-borne` :
 
 | Fichier | Contenu |

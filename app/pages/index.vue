@@ -5,7 +5,7 @@ import { SECTIONS, ORDER } from '~/data/sections'
 import { formatTime } from '~/composables/useQuiz'
 
 const { state, charge, doneCount } = useQuiz()
-const { kiosk, badges: BADGES, resetPlayer, idleSeconds } = useKiosk()
+const { kiosk, badges: BADGES, resetPlayer, idleSeconds, adminOpen } = useKiosk()
 const config = useRuntimeConfig()
 const site = (config.public.siteUrl || useRequestURL().origin).replace(/\/$/, '')
 useSeoMeta({
@@ -72,6 +72,17 @@ function onTabKey (e) {
         <button class="btn ghost" type="button" @click="boardOpen = true"><AppIcon name="trophy" />Classement</button>
         <button v-if="kiosk && hasPlayer" class="btn ghost" type="button" @click="newOpen = true"><AppIcon name="player" />Nouveau joueur</button>
         <SoundToggle />
+        <button
+          v-if="kiosk"
+          class="btn ghost icon"
+          type="button"
+          data-admin-open
+          aria-label="Quitter l’application (code requis)"
+          title="Quitter l’application"
+          @click="adminOpen = true"
+        >
+          <AppIcon name="power" :size="20" />
+        </button>
       </div>
     </header>
 

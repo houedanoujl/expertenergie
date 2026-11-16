@@ -192,7 +192,8 @@ function createWindow () {
   })
   const wc = win.webContents
   win.once('ready-to-show', () => win.show())
-  // en borne, la fenêtre ne se ferme pas (Alt+F4) : sortie par l'écran d'administration ou Ctrl+Maj+Q
+  // en borne, la fenêtre ne se ferme pas (Alt+F4) : sortie par l'écran d'administration
+  // (bouton ⏻ de l'accueil, puis le code) ou Ctrl+Maj+Q
   win.on('close', e => { if (cfg.kiosk && !quitting) e.preventDefault() })
   win.on('closed', () => { win = null })
   win.on('session-end', () => { quitting = true }) // arrêt de Windows : ne pas bloquer la fermeture

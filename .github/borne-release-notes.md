@@ -2,13 +2,17 @@ Version de test du **Quiz expert énergie** pour borne tactile Windows, hors lig
 
 ## Nouveautés de cette version
 
+- **Bouton ⏻ « Quitter » sur l'accueil** : plus besoin de clavier pour fermer l'application. Un toucher sur le bouton, le code d'administration, puis **Quitter l'application**.
+
+## Déjà dans la version précédente
+
 - **Trois quiz revus** : débutant, intermédiaire, expert, 10 questions chacun. Ils sont indépendants : on choisit celui qu'on veut sur l'écran d'accueil.
 - **2 minutes par quiz**, avec compte à rebours. Si le temps s'écoule avant la dernière question, l'écran « Temps écoulé : échec » s'affiche et la partie n'entre pas au classement.
 - **Points selon la justesse et le temps** : 100 points par bonne réponse, plus 2 points par seconde restante, au prorata des bonnes réponses.
 - **Bouton « Choisir un autre quiz »** à la fin de chaque quiz, qui ramène à l'écran de choix.
 - **Repère de quiz sur les scores** : une pastille (couleur, 1 à 3 barres, nom du niveau) indique à quel quiz correspond chaque score. Le classement a un onglet « Tous les quiz » et un onglet par quiz.
 
-Les parties jouées avec la version précédente (anciens quiz) restent dans l'export CSV, mais ne figurent plus au classement.
+Les parties jouées avec les anciens quiz (première version de test) restent dans l'export CSV, mais ne figurent plus au classement.
 
 ## Installation
 
@@ -23,7 +27,7 @@ Configuration visée : Windows 10 ou 11 64 bits, 4 Go de RAM. Aucune connexion i
 Comme sur une borne, la fenêtre occupe tout l'écran et ne se ferme pas avec Alt+F4.
 
 - **Avec un clavier** : `Ctrl+Maj+Q`.
-- **Au doigt** : toucher 5 fois de suite le logo CIPREL de l'accueil, saisir le code **2468**, puis **Quitter l'application**.
+- **Au doigt** : toucher le bouton **⏻** en haut à droite de l'accueil, saisir le code **2468**, puis **Quitter l'application**. Le code évite qu'un visiteur ferme le quiz.
 
 Sur un poste de bureau, pour éviter le lancement à chaque ouverture de session : mettre `"openAtLogin": false` dans `%APPDATA%\quiz-expert-energie-borne\borne.json`, ou désinstaller l'application (Paramètres → Applications). Avant d'installer une nouvelle version, quitter l'application.
 
@@ -38,7 +42,7 @@ Sur un poste de bureau, pour éviter le lancement à chaque ouverture de session
 
 ## Pour l'équipe
 
-- **Administration** (5 touchers sur le logo, code **2468**) : export des résultats en CSV (sur une clé USB, par exemple), redémarrage de l'écran, sortie de l'application.
+- **Administration** (bouton **⏻** de l'accueil ou 5 touchers sur le logo, code **2468**) : export des résultats en CSV (sur une clé USB, par exemple), redémarrage de l'écran, sortie de l'application.
 - **Réglages** : modifier `%APPDATA%\quiz-expert-energie-borne\borne.json` avec le Bloc-notes, puis relancer l'application :
   - `adminPin` : le code d'administration. **Changez-le avant la mise en service.**
   - `idleSeconds` : le délai d'inactivité, en secondes.
