@@ -70,7 +70,7 @@ function onTabKey (e) {
       </div>
       <div class="tools">
         <button class="btn ghost" type="button" @click="boardOpen = true"><AppIcon name="trophy" />Classement</button>
-        <button v-if="kiosk && hasPlayer" class="btn ghost" type="button" @click="newOpen = true"><AppIcon name="player" />Nouveau joueur</button>
+        <button v-if="hasPlayer" class="btn ghost" type="button" @click="newOpen = true"><AppIcon name="player" />Nouveau joueur</button>
         <SoundToggle />
         <button
           v-if="kiosk"
@@ -159,8 +159,8 @@ function onTabKey (e) {
       </div>
     </AppDialog>
 
-    <AppDialog v-if="kiosk" :open="newOpen" title="Nouveau joueur" @close="newOpen = false">
-      <p>La progression{{ state.name ? ` de ${state.name}` : '' }} (centrale, récompenses, quiz en cours) sera effacée de la borne. Les scores restent au classement.</p>
+    <AppDialog :open="newOpen" title="Nouveau joueur" @close="newOpen = false">
+      <p>La progression{{ state.name ? ` de ${state.name}` : '' }} (centrale, récompenses, quiz en cours) sera effacée {{ kiosk ? 'de la borne' : 'de cet appareil' }}. Les scores restent au classement.</p>
       <div class="confirm">
         <button class="btn" type="button" @click="resetPlayer"><AppIcon name="player" />Laisser la place</button>
         <button class="btn ghost" type="button" @click="newOpen = false">Annuler</button>

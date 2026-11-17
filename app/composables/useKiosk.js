@@ -1,5 +1,6 @@
 // Mode borne tactile (application Electron, NUXT_PUBLIC_KIOSK=true) :
-// pas de partage, clavier à l'écran, remise à zéro entre deux visiteurs.
+// pas de partage, remise à zéro après inactivité, administration.
+// Le clavier à l'écran et « Nouveau joueur » (resetPlayer) servent aussi à la version web.
 // `bridge` : fonctions de l'application (preload Electron), absentes dans un navigateur.
 import { STORAGE_KEY, BADGES } from '~/composables/useQuiz'
 
