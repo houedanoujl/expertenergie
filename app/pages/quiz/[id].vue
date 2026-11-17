@@ -286,10 +286,10 @@ const onShared = () => game.award('partage')
             <label for="pseudo">Votre pseudo, affiché au classement</label>
             <input
               id="pseudo" v-model="nameInput" type="text" maxlength="20" spellcheck="false"
-              :autocomplete="kiosk ? 'off' : 'nickname'" :inputmode="kiosk ? 'none' : undefined"
+              :autocomplete="kiosk ? 'off' : 'nickname'" inputmode="none"
               :aria-invalid="!!nameError" :aria-describedby="nameError ? 'pseudo-error' : 'pseudo-help'"
             >
-            <TouchKeyboard v-if="kiosk" v-model="nameInput" :maxlength="20" />
+            <TouchKeyboard v-model="nameInput" :maxlength="20" />
             <p v-if="nameError" id="pseudo-error" class="field-error" role="alert">{{ nameError }}</p>
             <p v-else id="pseudo-help" class="help">De 2 à 20 caractères. Aucun compte, aucune donnée personnelle.</p>
           </div>

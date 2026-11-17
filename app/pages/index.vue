@@ -5,7 +5,7 @@ import { SECTIONS, ORDER } from '~/data/sections'
 import { formatTime } from '~/composables/useQuiz'
 
 const { state, charge, doneCount } = useQuiz()
-const { kiosk, badges: BADGES, resetPlayer, idleSeconds } = useKiosk()
+const { kiosk, badges: BADGES, resetPlayer, idleSeconds, adminOpen } = useKiosk()
 const config = useRuntimeConfig()
 const site = (config.public.siteUrl || useRequestURL().origin).replace(/\/$/, '')
 useSeoMeta({
@@ -70,8 +70,19 @@ function onTabKey (e) {
       </div>
       <div class="tools">
         <button class="btn ghost" type="button" @click="boardOpen = true"><AppIcon name="trophy" />Classement</button>
-        <button v-if="kiosk && hasPlayer" class="btn ghost" type="button" @click="newOpen = true"><AppIcon name="player" />Nouveau joueur</button>
+        <button v-if="hasPlayer" class="btn ghost" type="button" @click="newOpen = true"><AppIcon name="player" />Nouveau joueur</button>
         <SoundToggle />
+        <button
+          v-if="kiosk"
+          class="btn ghost icon"
+          type="button"
+          data-admin-open
+          aria-label="Quitter l’application (code requis)"
+          title="Quitter l’application"
+          @click="adminOpen = true"
+        >
+          <AppIcon name="power" :size="20" />
+        </button>
       </div>
     </header>
 
@@ -148,8 +159,8 @@ function onTabKey (e) {
       </div>
     </AppDialog>
 
-    <AppDialog v-if="kiosk" :open="newOpen" title="Nouveau joueur" @close="newOpen = false">
-      <p>La progression{{ state.name ? ` de ${state.name}` : '' }} (centrale, récompenses, quiz en cours) sera effacée de la borne. Les scores restent au classement.</p>
+    <AppDialog :open="newOpen" title="Nouveau joueur" @close="newOpen = false">
+      <p>La progression{{ state.name ? ` de ${state.name}` : '' }} (centrale, récompenses, quiz en cours) sera effacée {{ kiosk ? 'de la borne' : 'de cet appareil' }}. Les scores restent au classement.</p>
       <div class="confirm">
         <button class="btn" type="button" @click="resetPlayer"><AppIcon name="player" />Laisser la place</button>
         <button class="btn ghost" type="button" @click="newOpen = false">Annuler</button>

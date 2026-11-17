@@ -93,10 +93,9 @@ L'étiquette `borne-v*` lance `.github/workflows/borne-windows.yml` : build sur 
 - **Hors ligne** : les polices sont embarquées (`@fontsource`). Toute requête qui ne vise pas le serveur local est bloquée et notée dans `logs/borne.log`.
 - **Mode borne** (`NUXT_PUBLIC_KIOSK`) :
   - pas de partage, de défi ni de récompense « Ambassadeur » ;
-  - clavier AZERTY à l'écran pour le pseudo ;
-  - « Toujours là ? » après `idleSeconds` sans toucher l'écran, puis remise à zéro du joueur ;
-  - bouton « Nouveau joueur ».
-- **Administration** : 5 touchers sur le logo de l'accueil, puis le code. On peut y exporter les résultats en CSV (tentatives, réponses et copie du journal), redémarrer l'écran ou quitter l'application. Le code est vérifié par le processus principal. `Ctrl+Maj+Q` quitte aussi l'application.
+  - « Toujours là ? » après `idleSeconds` sans toucher l'écran, puis remise à zéro du joueur.
+- **Communs au web et à la borne** : clavier AZERTY à l'écran pour le pseudo, bouton « Nouveau joueur » (efface la progression de l'appareil, pas le classement).
+- **Administration** : bouton ⏻ en haut à droite de l'accueil (ou 5 touchers sur le logo), puis le code. On peut y exporter les résultats en CSV (tentatives, réponses et copie du journal), redémarrer l'écran ou quitter l'application. Le code est vérifié par le processus principal. `Ctrl+Maj+Q` quitte aussi l'application.
 - **Fichiers sur la borne**, dans `%APPDATA%\quiz-expert-energie-borne` :
 
 | Fichier | Contenu |

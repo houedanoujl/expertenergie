@@ -1,5 +1,6 @@
 // Mode borne tactile (application Electron, NUXT_PUBLIC_KIOSK=true) :
-// pas de partage, clavier à l'écran, remise à zéro entre deux visiteurs.
+// pas de partage, remise à zéro après inactivité, administration.
+// Le clavier à l'écran et « Nouveau joueur » (resetPlayer) servent aussi à la version web.
 // `bridge` : fonctions de l'application (preload Electron), absentes dans un navigateur.
 import { STORAGE_KEY, BADGES } from '~/composables/useQuiz'
 
@@ -10,6 +11,8 @@ export function useKiosk () {
   const bridge = import.meta.client ? window.kiosk || null : null
   // hors ligne, « Ambassadeur » (partager un résultat) ne peut pas s'obtenir
   const badges = kiosk ? BADGES.filter(b => b.id !== 'partage') : BADGES
+  // fenêtre d'administration (KioskAdmin) : ouverte par le bouton de l'accueil ou le logo
+  const adminOpen = useState('kiosk-admin-open', () => false)
 
   // Visiteur suivant : on efface la progression du joueur (le son garde son réglage)
   // et on recharge l'accueil, ce qui remet aussi à zéro l'état des pages.
@@ -18,5 +21,5 @@ export function useKiosk () {
     window.location.replace('/')
   }
 
-  return { kiosk, idleSeconds, bridge, badges, resetPlayer }
+  return { kiosk, idleSeconds, bridge, badges, adminOpen, resetPlayer }
 }

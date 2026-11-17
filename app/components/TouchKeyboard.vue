@@ -1,6 +1,7 @@
 <script setup>
-// Clavier AZERTY à l'écran pour la borne (le clavier tactile de Windows ne s'ouvre pas
-// de façon fiable en plein écran). Saisie en fin de texte, majuscule au premier caractère.
+// Clavier AZERTY à l'écran pour le pseudo, sur la borne (le clavier tactile de Windows ne
+// s'ouvre pas de façon fiable en plein écran) comme sur le web.
+// Saisie en fin de texte, majuscule au premier caractère.
 const props = defineProps({
   modelValue: { type: String, default: '' },
   maxlength: { type: Number, default: 20 },
@@ -72,4 +73,12 @@ const label = k => (upper.value && k.length === 1 ? k.toUpperCase() : k)
 .key.on { background: var(--orange); }
 .key.space { flex-grow: 6; font-size: 1.05rem; color: var(--ink-2); }
 .key[disabled] { opacity: .4; cursor: default; }
+
+/* téléphone : dix touches par rangée doivent tenir dans la largeur */
+@media (max-width: 560px) {
+  .kbd { gap: 5px; padding: 6px; border-radius: 14px; }
+  .row { gap: 4px; }
+  .key { min-height: 46px; padding: 0; border-width: 1px; border-radius: 9px; font-size: 1.05rem; box-shadow: 0 1px 0 var(--ink); }
+  .key.space { font-size: .9rem; }
+}
 </style>

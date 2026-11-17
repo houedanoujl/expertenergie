@@ -1,12 +1,11 @@
 <script setup>
-// Administration de la borne, pour l'équipe : 5 touchers rapides sur le logo CIPREL
-// de l'accueil, puis le code (vérifié par l'application, jamais par la page).
+// Administration de la borne, pour l'équipe : bouton ⏻ de l'accueil (ou 5 touchers
+// rapides sur le logo CIPREL), puis le code (vérifié par l'application, jamais par la page).
 // Export CSV des résultats (clé USB), redémarrage de l'écran, sortie de l'application.
 const TAPS = 5
 const WINDOW_MS = 3000
 
-const { bridge } = useKiosk()
-const open = ref(false)
+const { bridge, adminOpen: open } = useKiosk()
 const pin = ref('')
 const unlocked = ref(false)
 const stats = ref(null)
@@ -21,13 +20,17 @@ function onTap (e) {
   taps = [...taps.filter(t => now - t < WINDOW_MS), now]
   if (taps.length >= TAPS) {
     taps = []
-    pin.value = ''
-    pinError.value = ''
-    msg.value = ''
-    unlocked.value = false
     open.value = true
   }
 }
+// à chaque ouverture (bouton ou logo), le code est redemandé
+watch(open, v => {
+  if (!v) return
+  pin.value = ''
+  pinError.value = ''
+  msg.value = ''
+  unlocked.value = false
+})
 // au clic et non au pointerdown : sinon le clic du 5e toucher arrive sur le fond
 // de la fenêtre qui vient de s'ouvrir, et la referme aussitôt
 onMounted(() => window.addEventListener('click', onTap, { capture: true }))
